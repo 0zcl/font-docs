@@ -4,13 +4,17 @@ module.exports = {
   themeConfig: {
     repo: 'http://gitlab.61info.com/i61/front-end-docs',
     editLinks: true,
-    sidebarDepth: 2,
+    sidebarDepth: 3,
     displayAllHeaders: true,
     lastUpdated: 'Last Updated',
     nav: [
       {
         text: '首页',
         link: '/'
+      },
+      {
+        text: 'babel',
+        link: '/babel/'
       },
       {
         text: '算法与数据结构',
@@ -32,6 +36,10 @@ module.exports = {
       }
     ],
     sidebar: [
+      {
+        title: 'babel',
+        path: '/babel/',
+      },
       {
         title: '算法与数据结构',
         path: '/code-reviews/',
