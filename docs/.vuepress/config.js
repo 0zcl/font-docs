@@ -1,11 +1,14 @@
+const path = require('path')
+
 module.exports = {
   title: '前端小册',
   description: 'Just playing around',
   themeConfig: {
     repo: 'http://gitlab.61info.com/i61/front-end-docs',
-    editLinks: true,
-    sidebarDepth: 3,
+    // editLinks: true,
+    // sidebarDepth: 4,
     displayAllHeaders: true,
+    // activeHeaderLinks: true,
     lastUpdated: 'Last Updated',
     nav: [
       {
@@ -18,49 +21,55 @@ module.exports = {
       },
       {
         text: '算法与数据结构',
-        items: [
-          { 
-            text: '算法',
-            items: [
-              { text: '递归与回溯', link: '/code-reviews/algorithm/' },
-              { text: '二叉树基础', link: '/code-reviews/algorithm/binaryTree' },
-            ]
-          },
-          { 
-            text: '数据结构',
-            items: [
-              { text: '命名规范', link: '/code-reviews/data-structure/' },
-            ]
-          }
-        ]
+        link: '/code-reviews/'
+        // items: [
+        //   { 
+        //     text: '算法',
+        //     items: [
+        //       { text: '递归与回溯', link: '/code-reviews/algorithm/' },
+        //       { text: '二叉树基础', link: '/code-reviews/algorithm/binaryTree' },
+        //     ]
+        //   },
+        //   { 
+        //     text: '数据结构',
+        //     items: [
+        //       { text: '命名规范', link: '/code-reviews/data-structure/' },
+        //     ]
+        //   }
+        // ]
       }
     ],
-    sidebar: [
-      {
-        title: 'babel',
-        path: '/babel/',
-      },
-      {
-        title: '算法与数据结构',
-        path: '/code-reviews/',
-        collapsable: true,
-        sidebarDepth: 3,
-        children: [
-          {
-            title: '算法',
-            path: '/code-reviews/algorithm/',
-            children: [
-              { title: '递归与回溯', path: '/code-reviews/algorithm/' },
-              { title: '二叉树基础', path: '/code-reviews/algorithm/binaryTree' },
-            ]
-          },
-          {
-            title: '数据结构',
-            path: '/code-reviews/data-structure/'
-          }
-        ]
+    sidebar: {
+      '/babel/': [
+        {
+          title: 'Babel',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', 'Introduction'],
+            'Babel_VS_Ts'
+          ]
+        }
+      ],
+      '/code-reviews/': [
+        {
+          title: '算法',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', 'Introduction'],
+            'binaryTree'
+          ]
+        }
+      ]
+    }
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@assets': path.resolve(__dirname, 'public/assets')
       }
-    ]
+    }
   },
   plugins: [
     '@vuepress/active-header-links',
