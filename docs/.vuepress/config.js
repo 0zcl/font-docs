@@ -20,6 +20,10 @@ module.exports = {
         link: '/babel/'
       },
       {
+        text: 'webpack',
+        link: '/webpack/'
+      },
+      {
         text: '算法与数据结构',
         link: '/code-reviews/'
         // items: [
@@ -48,6 +52,16 @@ module.exports = {
           children: [
             ['', 'Introduction'],
             'Babel_VS_Ts'
+          ]
+        }
+      ],
+      '/webpack/': [
+        {
+          title: 'webpack',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            '',
           ]
         }
       ],

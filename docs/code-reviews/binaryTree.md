@@ -1,21 +1,21 @@
-### 二叉树的遍历
+## 二叉树的遍历
 以一定的顺序规则，逐个访问二叉树的所有结点。按照顺序规则的不同，遍历方式有以下四种：
 * 先序遍历：根结点 -> 左子树 -> 右子树
 * 中序遍历：左子树 -> 根结点 -> 右子树
 * 后序遍历：左子树 -> 右子树 -> 根结点
 * 层次遍历
 
-### 遍历方法图解与编码实现
+## 遍历方法图解与编码实现
 以先序遍历为例，举一反三。先序遍历的“旅行路线”如下图红色数字 所示：
 ![blockchain](~@assets/code-reviews/6.png)
 如果说有 N 多个子树，那么我们<font color=red>**在每一棵子树内部，都要重复这个“旅行路线”**</font>，动画演示如下：
 ![blockchain](~@assets/code-reviews/7.gif)
 
-#### 递归函数的编写要点
+### 递归函数的编写要点
 * 递归式：遍历根结点 -> 左结点 -> 右结点。对每个子树，重复这个旅行路线。
 * 递归边界：结点为空时，结束。
 
-#### 代码
+### 代码
 ```javascript
 const root = {
   val: "A",
@@ -44,7 +44,7 @@ function preOrder(root) {
 }
 console.log(preOrder(root))
 ```
-#### 运行结果
+### 运行结果
 ```
 $ node binaryTree-1.js
 当前遍历的结点值是： A
@@ -55,7 +55,7 @@ $ node binaryTree-1.js
 当前遍历的结点值是： F
 ```
 
-### 图解先序遍历的完整过程
+## 图解先序遍历的完整过程
 各位现在完全可以再回过头来看一下我们前面示例的这棵二叉树：
 ![blockchain](~@assets/code-reviews/8.png)
 我们直接把它套进 preorder 函数里，一步一步来认清楚先序遍历的每一步做了什么：
@@ -74,7 +74,7 @@ C 不为空，进入递归式，输出 C 值。接着优先遍历 C 的左子树
 ![blockchain](~@assets/code-reviews/14.png)
 7. 进入preorder(F)的逻辑，F 不为空，进入递归式，输出 F 值。接着优先遍历 F 的左子树，preorder(root.left) 此时为 preorder(null)，触碰递归边界，直接返回 preorder(F)；继续preorder(F)执行下去，是preorder(root.right) ，这里 F 的 right 同样是 null，故直接返回preorder(F)。此时preorder(F)已经执行完了，返回preorder(C)；发现preorder(C)也执行完了，就回到 preorder(A)；发现preorder(A)作为递归入口，它的逻辑也已经执行完了，于是我们的递归活动就正式画上了句号。
 
-### 中序遍历与后序遍历
+## 中序遍历与后序遍历
 思路同上，这样只展示代码，以作备忘
 ```javascript
 / 所有遍历函数的入参都是树的根结点对象
