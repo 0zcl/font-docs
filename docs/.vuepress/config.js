@@ -61,7 +61,8 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            '',
+            ['', '基础用法'],
+            'module_chunk_bundle'
           ]
         }
       ],
