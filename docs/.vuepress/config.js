@@ -24,6 +24,10 @@ module.exports = {
         link: '/webpack/'
       },
       {
+        text: '移动端',
+        link: '/mobile/'
+      },
+      {
         text: '算法与数据结构',
         link: '/code-reviews/'
         // items: [
@@ -62,7 +66,20 @@ module.exports = {
           sidebarDepth: 3,
           children: [
             ['', '基础用法'],
-            'module_chunk_bundle'
+            'module_chunk_bundle',
+            'hash',
+            'postcss'
+          ]
+        }
+      ],
+      '/mobile/': [
+        {
+          title: '移动端',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', 'rem原理'],
+            ['adaptation', '移动端适配']
           ]
         }
       ],

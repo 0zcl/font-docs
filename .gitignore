@@ -5,9 +5,10 @@
 .cache
 .DS_Store
 .idea
+.temp
 build
 dist
-node_modules
+**/node_modules/
 .gitkeep
 converage
 .history

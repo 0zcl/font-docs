@@ -1,5 +1,5 @@
 
-## 一、module、chunk、bundle的区别
+## module、chunk、bundle的区别
 1. module: 指文件模块(eg: .js文件/.css文件/图片文件等)
 2. chunk: webpack 会根据入口文件引用关系生成 chunk 文件，webpack 会对这个 chunk 文件进行一些操作
 3. bundle：webpack 处理好 chunk 文件后，最后会输出 bundle 文件，这个 bundle 文件包含了经过加载和编译的最终源文件，所以它可以直接在浏览器中运行
