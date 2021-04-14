@@ -4,7 +4,7 @@ module.exports = {
   title: '前端小册',
   description: 'Just playing around',
   themeConfig: {
-    repo: 'http://gitlab.61info.com/i61/front-end-docs',
+    repo: 'https://github.com/0zcl',
     // editLinks: true,
     // sidebarDepth: 4,
     displayAllHeaders: true,
@@ -14,6 +14,18 @@ module.exports = {
       {
         text: '首页',
         link: '/'
+      },
+      {
+        text: '基础',
+        link: '/basic/'
+      },
+      {
+        text: 'HTTP与浏览器原理',
+        link: '/http&browser/'
+      },
+      {
+        text: 'nodejs',
+        link: '/nodejs/'
       },
       {
         text: 'babel',
@@ -45,9 +57,67 @@ module.exports = {
         //     ]
         //   }
         // ]
+      },
+      {
+        text: '工具',
+        items: [
+          { 
+            text: '公共函数库',
+            target:'_blank',
+            link: 'https://0zcl.github.io/utils-library/'
+          },
+          { 
+            text: 'h5-sdk',
+            target:'_blank',
+            link: 'https://0zcl.github.io/h5-sdk/'
+          },
+          { 
+            text: '移动端多页面模版',
+            target:'_blank',
+            link: 'https://github.com/0zcl/h5_template'
+          },
+          { 
+            text: 'zcl脚手架',
+            target:'_blank',
+            link: 'http://gitlab.61info.com:8190/zcl/tpc-cli'
+          }
+        ]
       }
     ],
     sidebar: {
+      '/basic/': [
+        {
+          title: '基础知识',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', '模块化'],
+            'moduleCircle',
+            ['RegExp', '正则匹配'],
+            ['interview', '面试']
+          ]
+        }
+      ],
+      '/http&browser/': [
+        {
+          title: 'HTTP与浏览器原理',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', 'JSONP']
+          ]
+        }
+      ],
+      '/nodejs/': [
+        {
+          title: 'Nodejs',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', '基础']
+          ]
+        }
+      ],
       '/babel/': [
         {
           title: 'Babel',
@@ -68,7 +138,8 @@ module.exports = {
             ['', '基础用法'],
             'module_chunk_bundle',
             'hash',
-            'postcss'
+            'postcss',
+            ['__webpack_require__', 'webpack 模块加载原理']
           ]
         }
       ],

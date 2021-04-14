@@ -43,9 +43,12 @@ index.css 和 common.js 在 index.js 中被引入，打包生成的 index.bundle
 ![webpack打包过程](@assets/webpack/3.png)
 
 
-## 总结
+## 面试
+问：module、chunk、bundle的区别？
+
+答：
 module，chunk 和 bundle 其实就是同一份逻辑代码在不同转换场景下的取了三个名字：
 
-我们直接写出来的是 module，webpack 处理时是 chunk，最后生成浏览器可以直接运行的 bundle
+module是开发时编写的文件模块；webpack 根据entry入口文件的依赖图，生成chunk，webpack再对 chunk 做相关处理；bundle 是最终生成文件，浏览器可以直接运行
 
 参考：https://www.cnblogs.com/skychx/p/webpack-module-chunk-bundle.html

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul id="test">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+  </ul>
+  <script>
+    // 面试题一
+    // 实现一：点击li，alert出当前li的内容
+    // const container = document.getElementById('test')
+    // container.addEventListener('click', e => {
+    //   console.log(e, e.target, e.target.innerText)
+    //   alert(e.target.innerText)
+    // })
+    // container.onclick = function(e) {
+    //   console.log(e, e.target, e.target.innerText)
+    //   alert(e.target.innerText)
+    // }
+    // 实现二：点击li，alert出当前li的索引
+    const container = document.getElementById('test')
+    container.addEventListener('click', e => {
+      const allLiTag = [...document.getElementsByTagName('li')]
+      alert(allLiTag.indexOf(e.target))
+    })
+
+    // 面试题二
+    // add(2)(2)(2) = 6     add(3)(3) = 6实现一个类似这样的函数
+    function addNum(sum) {
+      const fn = (newNum) => {
+        sum += newNum
+        return fn
+      }
+      fn.toString = () => {
+        return sum
+      }
+      return fn
+    }
+  </script>
+</body>
+</html>
