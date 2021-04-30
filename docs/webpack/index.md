@@ -316,7 +316,79 @@ document.write(helloworld());
 ```
 
 ### 进⼀步分析 webpack 的模块机制
-篇幅较多，单独讲
+[篇幅较多，单独讲](./__webpack_require__.md)
+
+## 懒加载
+也称 [按需加载](https://webpack.docschina.org/guides/lazy-loading/)
+加快了应用的初始加载速度，减轻了它的总体体积，加快首屏渲染速度。因为某些代码块可能永远不会被加载
+```js
+// text.js
+import React from 'react'
+export default () => <div>动态 import</div>
+```
+```js
+  loadComponent() {
+    import('./text').then(Text => {
+      console.log(Text);
+      this.setState({
+        Text: Text.default
+      })
+    })
+  }
+  // ...省略
+  <img src={logo} onClick={ this.loadComponent.bind(this) } />
+```
+点击图片时，才动态加载
+![lazy-load](@assets/webpack/15.png)
+
+## 构建信息显示
+stats：统计信息，生产模式直接设置 stats: "errors-only"，开发模式在 devServer: { stats: "xxx" }
+1. errors-only：只在发生错误时输出
+2. minimal：只在发生错误或新的编译开始时输出
+3. none：没有输出
+4. normal：标准输出
+5. verbose：全部输出
+
+## 优化命令行构建日志
+使用 [friendly-errors-webpack-plugin](https://www.npmjs.com/package/friendly-errors-webpack-plugin)
+* success：构建成功时的日志
+* warning：构建警告时的日志
+* error：构建失败时的日志
+```js
+module.exports = {
+  plugins: [
+    new FriendlyErrorsWebpackPlugin()
+  ],
+  stats: "errors-only"
+}
+```
+![error](@assets/webpack/22.png)
+
+
+## 构建异常中断处理
+如何判断构建是否成功？
+在 CI/CD 的 pipline 或者发布系统需要知道当前构建状态
+
+每次构建完成后输⼊ echo $? 获取错误码
+
+如何主动捕获并处理构建错误？
+compiler 在每次构建结束后会触发 done 这个 hook
+```js
+function() {
+  this.hooks.done.tap('done', stats => {
+    // console.log('stats', stats)
+    console.log('stats.compilation.errors', stats.compilation.errors)
+    console.log('length', stats.compilation.errors.length)
+    if(stats.compilation.errors && 
+        stats.compilation.errors.length
+    ) {
+      console.log("Build Error");
+      process.exit(1);  // 非 0 表示失败
+    }
+  })
+}
+```
+![comiler-done](@assets/webpack/23.png)
 
 ## 面试
 问：说说less-loader、css-loader、style-loader的作用
@@ -357,3 +429,8 @@ import debounce from 'lodash/lib/debounce';
 第一种的 全部导入 是不支持 Tree Shaking 的，其他都支持。
 
 为什么呢？因为当你将整个库导入到单个 JavaScript 对象中时，就意味着你告诉 Webpack，你需要整个库，这样 Webpack 就不会摇它。
+
+问：说说webpack懒加载原理
+
+答：
+[篇幅较多，单独讲](./lazy-load.md)

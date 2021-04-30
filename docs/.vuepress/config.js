@@ -20,6 +20,10 @@ module.exports = {
         link: '/basic/'
       },
       {
+        text: 'css',
+        link: '/css/'
+      },
+      {
         text: 'HTTP与浏览器原理',
         link: '/http&browser/'
       },
@@ -94,7 +98,23 @@ module.exports = {
             ['', '模块化'],
             'moduleCircle',
             ['RegExp', '正则匹配'],
+            '0.1+0.2',
             ['interview', '面试']
+          ]
+        }
+      ],
+      '/css/': [
+        {
+          title: 'CSS高频面试题',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', '盒子模型'],
+            ['center', '水平垂直居中'],
+            ['triangle', '画三角形'],
+            'bfc',
+            ['layout', '三栏布局'],
+            'interview'
           ]
         }
       ],
@@ -104,7 +124,9 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['', 'JSONP']
+            ['', 'JSONP'],
+            ['url', 'url输入到返回请求的过程'],
+            'interview'
           ]
         }
       ],
@@ -139,7 +161,8 @@ module.exports = {
             'module_chunk_bundle',
             'hash',
             'postcss',
-            ['__webpack_require__', 'webpack 模块加载原理']
+            ['__webpack_require__', 'webpack 模块加载原理'],
+            'lazy-load'
           ]
         }
       ],
@@ -177,6 +200,10 @@ module.exports = {
   plugins: [
     '@vuepress/active-header-links',
     '@vuepress/back-to-top',
+    ["md-enhance", {
+      sub: true,
+      sup: true,
+    }],
     ['@vuepress/search', {
       searchMaxSuggestions: 10
     }]
