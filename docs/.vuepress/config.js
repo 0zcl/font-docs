@@ -40,47 +40,36 @@ module.exports = {
         link: '/webpack/'
       },
       {
+        text: 'Vue',
+        link: '/vue/'
+      },
+      {
         text: '移动端',
         link: '/mobile/'
       },
       {
         text: '算法与数据结构',
         link: '/code-reviews/'
-        // items: [
-        //   { 
-        //     text: '算法',
-        //     items: [
-        //       { text: '递归与回溯', link: '/code-reviews/algorithm/' },
-        //       { text: '二叉树基础', link: '/code-reviews/algorithm/binaryTree' },
-        //     ]
-        //   },
-        //   { 
-        //     text: '数据结构',
-        //     items: [
-        //       { text: '命名规范', link: '/code-reviews/data-structure/' },
-        //     ]
-        //   }
-        // ]
       },
       {
         text: '工具',
         items: [
-          { 
+          {
             text: '公共函数库',
             target:'_blank',
             link: 'https://0zcl.github.io/utils-library/'
           },
-          { 
+          {
             text: 'h5-sdk',
             target:'_blank',
             link: 'https://0zcl.github.io/h5-sdk/'
           },
-          { 
+          {
             text: '移动端多页面模版',
             target:'_blank',
             link: 'https://github.com/0zcl/h5_template'
           },
-          { 
+          {
             text: 'zcl脚手架',
             target:'_blank',
             link: 'http://gitlab.61info.com:8190/zcl/tpc-cli'
@@ -99,6 +88,7 @@ module.exports = {
             'moduleCircle',
             ['RegExp', '正则匹配'],
             '0.1+0.2',
+            'evenLoop',
             ['interview', '面试']
           ]
         }
@@ -114,7 +104,7 @@ module.exports = {
             ['triangle', '画三角形'],
             'bfc',
             ['layout', '三栏布局'],
-            'interview'
+            ['interview', '面试']
           ]
         }
       ],
@@ -163,6 +153,16 @@ module.exports = {
             'postcss',
             ['__webpack_require__', 'webpack 模块加载原理'],
             'lazy-load'
+          ]
+        }
+      ],
+      '/vue/': [
+        {
+          title: 'webpack',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['', '基础用法'],
           ]
         }
       ],
