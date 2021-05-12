@@ -115,7 +115,10 @@ module.exports = {
           sidebarDepth: 3,
           children: [
             ['', 'JSONP'],
-            ['url', 'url输入到返回请求的过程'],
+            'iso',
+            ['cache', '浏览器缓存'],
+            ['composite', '层合成'],
+            ['url', 'URL输入到返回请求的过程'],
             'interview'
           ]
         }
