@@ -41,7 +41,24 @@ module.exports = {
       },
       {
         text: 'Vue',
-        link: '/vue/'
+        items: [
+          {
+            text: '响应式',
+            link: '/vue/reactive/'
+          },
+          {
+            text: '模版编译',
+            link: '/vue/compiler/'
+          },
+          {
+            text: '虚拟DOM',
+            link: '/vue/vnode/'
+          },
+          {
+            text: '整体流程',
+            link: '/vue/whole-process/'
+          }
+        ]
       },
       {
         text: '移动端',
@@ -159,13 +176,51 @@ module.exports = {
           ]
         }
       ],
-      '/vue/': [
+      '/vue/reactive/': [
         {
-          title: 'webpack',
+          title: '响应式',
           collapsable: false,
-          sidebarDepth: 3,
           children: [
-            ['', '基础用法'],
+            {
+              title: '响应式',
+              path: '/vue/reactive/'
+            }
+          ]
+        }
+      ],
+      '/vue/compiler/': [
+        {
+          title: '模版编译',
+          collapsable: false,
+          children: [
+            {
+              title: '模版编译',
+              path: '/vue/compiler/'
+            }
+          ]
+        }
+      ],
+      '/vue/vnode/': [
+        {
+          title: '虚拟DOM',
+          collapsable: false,
+          children: [
+            {
+              title: '虚拟DOM',
+              path: '/vue/vnode/'
+            }
+          ]
+        }
+      ],
+      '/vue/whole-process/': [
+        {
+          title: '整体流程',
+          collapsable: false,
+          children: [
+            {
+              title: '整体流程',
+              path: '/vue/whole-process/'
+            }
           ]
         }
       ],
