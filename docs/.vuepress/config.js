@@ -183,7 +183,15 @@ module.exports = {
           children: [
             {
               title: '响应式',
-              path: '/vue/reactive/'
+              path: '/vue/reactive/',
+              children: [
+                ['', 'MVVM概念'],
+                'reactive',
+                ['nextTick', 'nextTick原理'],
+                ['watch', 'watch原理'],
+                ['computed', 'computed原理'],
+                ['interview', '面试']
+              ]
             }
           ]
         }
@@ -195,7 +203,10 @@ module.exports = {
           children: [
             {
               title: '模版编译',
-              path: '/vue/compiler/'
+              path: '/vue/compiler/',
+              children: [
+                ''
+              ]
             }
           ]
         }
@@ -207,7 +218,12 @@ module.exports = {
           children: [
             {
               title: '虚拟DOM',
-              path: '/vue/vnode/'
+              path: '/vue/vnode/',
+              children: [
+                '',
+                ['diff', 'diff算法'],
+                ['ssr', 'SSR']
+              ]
             }
           ]
         }
