@@ -17,7 +17,16 @@ module.exports = {
       },
       {
         text: '基础',
-        link: '/basic/'
+        items: [
+          {
+            text: '基础',
+            link: '/basic/basic/'
+          },
+          {
+            text: '手写代码',
+            link: '/basic/code_write/'
+          }
+        ]
       },
       {
         text: 'css',
@@ -95,18 +104,41 @@ module.exports = {
       }
     ],
     sidebar: {
-      '/basic/': [
+      '/basic/basic/': [
         {
           title: '基础知识',
           collapsable: false,
-          sidebarDepth: 3,
+          // sidebarDepth: 3,
           children: [
-            ['', '模块化'],
-            'moduleCircle',
-            ['RegExp', '正则匹配'],
-            '0.1+0.2',
-            'evenLoop',
-            ['interview', '面试']
+            {
+              title: '基础知识',
+              path: '/basic/basic/',
+              children: [
+                ['', '模块化'],
+                'moduleCircle',
+                ['RegExp', '正则匹配'],
+                '0.1+0.2',
+                'evenLoop',
+                ['interview', '面试']
+              ]
+            }
+          ]
+        }
+      ],
+      '/basic/code_write/': [
+        {
+          title: '手写代码',
+          collapsable: false,
+          children: [
+            {
+              title: '手写代码',
+              path: '/basic/code_write/',
+              children: [
+                ['', '手写类型转换'],
+                ['new', '手写new'],
+                ['copy', '手写深拷贝']
+              ]
+            }
           ]
         }
       ],
@@ -205,7 +237,9 @@ module.exports = {
               title: '模版编译',
               path: '/vue/compiler/',
               children: [
-                ''
+                '',
+                ['slot', '插槽'],
+                ['keep-alive', 'keep-alive']
               ]
             }
           ]
@@ -235,7 +269,14 @@ module.exports = {
           children: [
             {
               title: '整体流程',
-              path: '/vue/whole-process/'
+              path: '/vue/whole-process/',
+              children: [
+                '',
+                ['use', '插件注册'],
+                ['mixin', '混入'],
+                ['filter', '过滤器'],
+                ['directive', '自定义指令']
+              ]
             }
           ]
         }
