@@ -31,7 +31,7 @@ callback({message:"success"});
 ## 面试
 问：说下JSONP的原理
 
-答：
+答：script标签不受浏览器同源策略的限制
 
 
 问：实现一个高质量JSONP函数(字节面试题)

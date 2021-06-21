@@ -136,7 +136,15 @@ module.exports = {
               children: [
                 ['', '手写类型转换'],
                 ['new', '手写new'],
-                ['copy', '手写深拷贝']
+                ['copy', '手写深拷贝'],
+                ['create', '手写Object.create'],
+                ['inherit', '手写继承'],
+                ['extends', '手写extends'],
+                ['instanceof', '手写instanceof'],
+                ['call&apply&bind', '手写call、apply、bind'],
+                ['jsonp', '手写jsonp'],
+                ['getQueryString', '手写getQueryString'],
+                ['setInterval', '手写setInterval']
               ]
             }
           ]

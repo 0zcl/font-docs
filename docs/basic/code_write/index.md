@@ -38,3 +38,20 @@ var obj = {
 }
 console.log(obj + 1); // 输出4
 ```
+
+
+::: warning
+堆和栈有什么区别？
+:::
+* 堆：保存对象。空间较小。一种树状结构。
+* 栈：保存基本数据类型，及对象的引用。空间较大。先进后出。
+
+
+```js
+var a = {n: 1};
+var b = a;
+a.x = a = {n: 2};
+a.x 	// 这时 a.x 的值是多少
+b.x 	// 这时 b.x 的值是多少
+```
+![stack](@assets/basic/code_write/7.png)
