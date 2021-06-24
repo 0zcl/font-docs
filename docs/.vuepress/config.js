@@ -144,7 +144,14 @@ module.exports = {
                 ['call&apply&bind', '手写call、apply、bind'],
                 ['jsonp', '手写jsonp'],
                 ['getQueryString', '手写getQueryString'],
-                ['setInterval', '手写setInterval']
+                ['setInterval', '手写setInterval'],
+                ['debounce&throttle', '手写防抖与节流'],
+                ['for_of', '手写对象属性值迭代器'],
+                ['event_delegation', '手写事件委托'],
+                ['lazyLoad', '手写图片懒加载'],
+                ['ajax', '手写原生Ajax请求'],
+                ['aop', '手写AOP装饰函数'],
+                ['curry', '手写柯里函数']
               ]
             }
           ]

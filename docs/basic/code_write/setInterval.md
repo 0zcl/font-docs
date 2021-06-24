@@ -75,7 +75,10 @@ var timer = obj.setInterval(() => {
   }
 }, 1000)
 ```
-
+<code>window.requestAnimationFrame()</code>传入一个回调函数作为参数，该回调函数会在浏览器下一次重绘之前执行。
+:::tip
+window.requestAnimationFrame只会调用一次回调。若你想在浏览器下次重绘之前继续更新下一帧动画，那么回调函数自身必须再次调用window.requestAnimationFrame()
+:::
 
 参考：[深入理解定时器系列第一篇——理解setTimeout和setInterval](https://www.cnblogs.com/xiaohuochai/p/5773183.html)
 [window.requestAnimationFrame](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame)
