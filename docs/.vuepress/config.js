@@ -151,7 +151,13 @@ module.exports = {
                 ['lazyLoad', '手写图片懒加载'],
                 ['ajax', '手写原生Ajax请求'],
                 ['aop', '手写AOP装饰函数'],
-                ['curry', '手写柯里函数']
+                ['curry', '手写柯里函数'],
+                ['timeChunk', '手写分时函数'],
+                ['flat', '手写数组扁平化flat'],
+                ['repeat', '手写数组去重'],
+                ['eventEmit', '手写eventEmit类'],
+                ['reactive', '手写Vue数据响应式'],
+                ['nextTick', '手写Vue nextTick']
               ]
             }
           ]
