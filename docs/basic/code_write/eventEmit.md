@@ -62,3 +62,4 @@ event.emit('js')
 注意：
 1. emit传入的参数需要 传给监听的事件
 2. once接入，重写了on监听的事件。新的事件fn，在调用旧的事件之前先把eventName对应的事件队列清空。个人理解其思想上和前几节复习到的[AOP装饰函数](./aop.md)异曲同工
+3. 监听器函数被调用时，this 关键词会被指向监听器所绑定的 EventEmitter 实例. [官网](http://nodejs.cn/api/events.html#events_passing_arguments_and_this_to_listeners)

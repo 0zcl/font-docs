@@ -33,8 +33,22 @@ module.exports = {
         link: '/css/'
       },
       {
-        text: 'HTTP与浏览器原理',
-        link: '/http&browser/'
+        text: '浏览器相关',
+        // link: '/browser/browser/'
+        items: [
+          {
+            text: '浏览器',
+            link: '/browser/browser/'
+          },
+          {
+            text: 'HTTP',
+            link: '/browser/http/'
+          },
+          {
+            text: '网络安全',
+            link: '/browser/security/'
+          }
+        ]
       },
       {
         text: 'nodejs',
@@ -157,7 +171,8 @@ module.exports = {
                 ['repeat', '手写数组去重'],
                 ['eventEmit', '手写eventEmit类'],
                 ['reactive', '手写Vue数据响应式'],
-                ['nextTick', '手写Vue nextTick']
+                ['nextTick', '手写Vue nextTick'],
+                ['promise', '手写Promise']
               ]
             }
           ]
@@ -178,18 +193,34 @@ module.exports = {
           ]
         }
       ],
-      '/http&browser/': [
+      '/browser/browser/': [
         {
-          title: 'HTTP与浏览器原理',
+          title: '浏览器',
           collapsable: false,
-          sidebarDepth: 3,
           children: [
-            ['', 'JSONP'],
-            'iso',
-            ['cache', '浏览器缓存'],
-            ['composite', '层合成'],
+            ['', '浏览器'],
+            ['jsonp', 'JSONP'],
             ['url', 'URL输入到返回请求的过程'],
-            'interview'
+            ['cache', '浏览器缓存'],
+            ['composite', '层合成']
+          ]
+        }
+      ],
+      '/browser/http/': [
+        {
+          title: 'http',
+          collapsable: false,
+          children: [
+            ['', '一个数据包在网络中的心路历程']
+          ]
+        }
+      ],
+      '/browser/security/': [
+        {
+          title: '网络安全',
+          collapsable: false,
+          children: [
+            ['', '网络安全']
           ]
         }
       ],
