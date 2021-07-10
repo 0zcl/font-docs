@@ -1,5 +1,5 @@
 ## 同源策略
-同源指协议、域名、端口相同，同源策略是浏览器的安全机制。
+同源指<code>协议、域名、端口相同</code>，同源策略是浏览器的安全机制。
 不允许指不同源的DOM进行操作。场景：iframe跨域情况，不同的iframe是限制互相访问的
 不允许XHR对象向不同源的服务器地址发起HTTP请求
 
@@ -10,7 +10,7 @@ JSONP(json with padding)。script标签不受浏览器同源策略的限制，�
 浏览器通过 Script 标签 发起 Get 请求，将浏览器定义的 回调函数名 传给后端，后端收到浏览器的 Get 请求后，去查询获取数据，返回 JS 数据。JS数据 即请求的 Script 标签内容。包含之前定义的 回调函数名，参数是后端 获取的数据
 </strong>
 
-![dfd](@assets/http&browser/1.png)
+![dfd](@assets/browser/browser/1.png)
 
 
 ```js

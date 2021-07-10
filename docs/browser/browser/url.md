@@ -1,5 +1,3 @@
-## 说一下从url输入到返回请求的过程
-
 ## url解析
 url为什么需要解析？url编码方式？encodeURIComponent比encodeURI区别？
 ### url为什么要解析(编码)？
@@ -54,7 +52,7 @@ console.log(url) // "https://github.com?param=https%3A%2F%2Fgithub.com%2FJacky-S
 2. 查询本地DNS缓存，如果存在，则域名解析完成。
 3. 查询计算机上配置的DNS服务器是否有缓存。
 4. 还找不到的话，本地DNS服务器会访问<code>根域名服务器</code>，<code>根域名服务器</code>返回对应的<code>顶级域名</code>服务器(.com)的地址。本地DNS服务器访问顶级域名服务器，如果顶级域名服务器无法解析域名，则查找下一级，直至找到www.baidu.com映射的IP。
-![dns](@assets/http&browser/2.png)
+![dns](@assets/browser/browser/2.png)
 
 dns查询有两种模式，一种是<code>转发模式</code>，一种是<code>非转发模式</code>，我上面说的4是非转发模式
 
@@ -65,7 +63,7 @@ chrome://net-internals/#dns 标签页下现在看不到浏览器缓存的DNS记�
 ### 预解析的实现
 dns-prefetch 预解析 优化页面加载速度。
 浏览器访问一个链接时并不是直接将请求到网页对应的服务器上，而是先要做域名解析——将域名解析到网页对应的服务器 ip 地址，然后浏览器才能和服务器之间建立起通信交互，其过程大致如下图所示：
-![dns-prefetch](@assets/http&browser/3.png)
+![dns-prefetch](@assets/browser/browser/3.png)
 域名解析就要访问域名服务器（在没有缓存缓存的情况下），这就会出现网路开销，开销的大小新取决于你的 dns 服务器和你的距离，一般要要几十毫秒到几百毫秒之间。一般的大型网站，资源都是分开存储的，一个页面上请求十几个域名是常有的事情
 
 dns-prefetch（dns 预解析）指令可以在尚未访问 资源url 的时候提前做 dns 解析（和其他 url 请求并行执行），从而在真正请求 url 的时候避免对 dns 服务器的解析，进而达到加速网页加载的目的。
@@ -87,7 +85,7 @@ dns-prefetch（dns 预解析）指令可以在尚未访问 资源url 的时候�
 1. 主机A发送 SYN=1的TCP包，并随机产生一个序列号<code>seq=x</code>（作为tcp包一部分）
 2. 主机B收到请求后，向主机A发送 确认号<code>ack=x+1</code>，主机B随机产生的序列号<code>seq=y</code> 的tcp包
 3. 主机A收到请求后，检查 确认号 是否之前发送的seq+1。若是，则主机A向主机B发送 确认号<code>ack=y+1</code>，序列号<code>seq=x+1</code>。 主机B收到后确认下 ack，则连接建立成功
-![tcp](@assets/http&browser/4.png)
+![tcp](@assets/browser/browser/4.png)
 
 ### 为什么需要三次握手，两次不行吗？
 * 第一次握手说明：客户端有发送能力，服务端有接收能力
@@ -106,18 +104,18 @@ dns-prefetch（dns 预解析）指令可以在尚未访问 资源url 的时候�
 ## 从网卡把数据包传输出去到服务器发生了什么？
 
 [探究！一个数据包在网络中的心路历程](https://mp.weixin.qq.com/s/iSZp41SRmh5b2bXIvzemIw)
-![iso](@assets/http&browser/5.png)
+![iso](@assets/browser/browser/5.png)
 * 生成IP报文(源IP、目标IP、源端口号、目标端口号)后，在IP报文头部加上MAC头部(发送方MAC地址、接收方MAC地址)，MAC地址用于两点之间的传输。如果本地arp表中没有目标IP对应的MAC缓存，则需要通过ARP协议广播能到接收方的MAC地址。
 
-![arp](@assets/http&browser/6.png)
+![arp](@assets/browser/browser/6.png)
 * 网卡把数据包转为电信号，在局域网内通过网线把数据包发送到局域网内的交换机
 * 交换机收到数据包后，拿到数据包的接收方MAC，查找MAC地址表，将信号发送到相应的端口。如果交换机的MAC地址表找不到 MAC地址，则会将数据包 转发到除源端口外的所有端口
 
-![mac地址表](@assets/http&browser/7.png)
+![mac地址表](@assets/browser/browser/7.png)
 * 路由器收到数据包后，去掉包的MAC头部(MAC 头部的作用就是将包送达路由器，接收方的MAC地址就是路由器端口的MAC地址，当包到达路由器之后，MAC 头部的任务就完成了，于是 MAC 头部就会被丢弃)，然后查询路由表判断转发目标。
 * 匹配到的路由记录的网关列，如果是IP地址，则此时还未抵达终点，需要路由器转发数据包，这个IP 地址就是我们要转发到的目标地址；如果网关列为空，表示找到了数据包IP报文的目标地址，此时已抵达终点 
 
-![mac地址表](@assets/http&browser/8.png)
+![mac地址表](@assets/browser/browser/8.png)
 * 路由器匹配结果还未抵达终点情况下，知道下一个路由器的IP地址，如果路由器的ARP缓存找不到MAC地址，通过ARP协议，查到下一个路由器的IP地址对应的MAC地址，并将其做为数据包的接收方MAC地址；同时以路由器的输出端口的MAC地址作为发送方MAC地址。此路由器将数据包转发到下一个路由器，经过层层转发之后，数据包到达最终目的地
 * 数据包到达服务器，服务器对数据包进行拆包。
     * 拆开数据包的MAC头部，接收方MAC地址是否是本地的MAC地址。 -- 数据链路层
@@ -125,7 +123,7 @@ dns-prefetch（dns 预解析）指令可以在尚未访问 资源url 的时候�
     * 拆开TCP头部，TCP头部有端口号，应用层的http服务正在监听这个端口号。-- 传输层
     * http获取http数据。-- 应用层
 
-![封包和拆包](@assets/http&browser/9.png)
+![封包和拆包](@assets/browser/browser/9.png)
 
 ## 浏览器缓存
 3次握手之后接着说道，建立完链接，就该请求html文件了，如果html文件在缓存里面浏览器直接返回，如果没有，就去服务器拿
@@ -140,7 +138,7 @@ dns-prefetch（dns 预解析）指令可以在尚未访问 资源url 的时候�
 获取html之后，会解析html。说说这个过程？
 解析HTML分为 <code>构建 DOM 树、构建渲染树、布局、绘制、渲染层合成</code>5个步骤
 
-![html_render](@assets/http&browser/14.png)
+![html_render](@assets/browser/browser/14.png)
 * 构建DOM树：浏览器将 HTML 解析成树形结构的 DOM 树
 * 构建渲染树：浏览器将 CSS 解析成树形结构的 CSSOM 树，再和 DOM 树合并成渲染树
 * 布局(Layout)：根据渲染树每一个节点布局，计算每个节点在屏幕上的正确位置

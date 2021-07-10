@@ -1,4 +1,14 @@
 const path = require('path')
+const fs = require('fs')
+
+// const importPlugins = (dirPath, filePath) => {
+//   return fs
+//   .readdirSync(path.resolve(__dirname, dirPath))
+//   .map(filename => filePath + filename.slice(0, -3))
+//   .sort()
+// }
+
+
 
 module.exports = {
   title: '前端小册',
@@ -34,21 +44,7 @@ module.exports = {
       },
       {
         text: '浏览器相关',
-        // link: '/browser/browser/'
-        items: [
-          {
-            text: '浏览器',
-            link: '/browser/browser/'
-          },
-          {
-            text: 'HTTP',
-            link: '/browser/http/'
-          },
-          {
-            text: '网络安全',
-            link: '/browser/security/'
-          }
-        ]
+        link: '/browser/theory/'
       },
       {
         text: 'nodejs',
@@ -122,20 +118,13 @@ module.exports = {
         {
           title: '基础知识',
           collapsable: false,
-          // sidebarDepth: 3,
           children: [
-            {
-              title: '基础知识',
-              path: '/basic/basic/',
-              children: [
-                ['', '模块化'],
-                'moduleCircle',
-                ['RegExp', '正则匹配'],
-                '0.1+0.2',
-                'evenLoop',
-                ['interview', '面试']
-              ]
-            }
+            ['', '模块化'],
+            'moduleCircle',
+            ['RegExp', '正则匹配'],
+            '0.1+0.2',
+            'evenLoop',
+            ['interview', '面试']
           ]
         }
       ],
@@ -144,37 +133,31 @@ module.exports = {
           title: '手写代码',
           collapsable: false,
           children: [
-            {
-              title: '手写代码',
-              path: '/basic/code_write/',
-              children: [
-                ['', '手写类型转换'],
-                ['new', '手写new'],
-                ['copy', '手写深拷贝'],
-                ['create', '手写Object.create'],
-                ['inherit', '手写继承'],
-                ['extends', '手写extends'],
-                ['instanceof', '手写instanceof'],
-                ['call&apply&bind', '手写call、apply、bind'],
-                ['jsonp', '手写jsonp'],
-                ['getQueryString', '手写getQueryString'],
-                ['setInterval', '手写setInterval'],
-                ['debounce&throttle', '手写防抖与节流'],
-                ['for_of', '手写对象属性值迭代器'],
-                ['event_delegation', '手写事件委托'],
-                ['lazyLoad', '手写图片懒加载'],
-                ['ajax', '手写原生Ajax请求'],
-                ['aop', '手写AOP装饰函数'],
-                ['curry', '手写柯里函数'],
-                ['timeChunk', '手写分时函数'],
-                ['flat', '手写数组扁平化flat'],
-                ['repeat', '手写数组去重'],
-                ['eventEmit', '手写eventEmit类'],
-                ['reactive', '手写Vue数据响应式'],
-                ['nextTick', '手写Vue nextTick'],
-                ['promise', '手写Promise']
-              ]
-            }
+            ['', '手写类型转换'],
+            ['new', '手写new'],
+            ['copy', '手写深拷贝'],
+            ['create', '手写Object.create'],
+            ['inherit', '手写继承'],
+            ['extends', '手写extends'],
+            ['instanceof', '手写instanceof'],
+            ['call&apply&bind', '手写call、apply、bind'],
+            ['jsonp', '手写jsonp'],
+            ['getQueryString', '手写getQueryString'],
+            ['setInterval', '手写setInterval'],
+            ['debounce&throttle', '手写防抖与节流'],
+            ['for_of', '手写对象属性值迭代器'],
+            ['event_delegation', '手写事件委托'],
+            ['lazyLoad', '手写图片懒加载'],
+            ['ajax', '手写原生Ajax请求'],
+            ['aop', '手写AOP装饰函数'],
+            ['curry', '手写柯里函数'],
+            ['timeChunk', '手写分时函数'],
+            ['flat', '手写数组扁平化flat'],
+            ['repeat', '手写数组去重'],
+            ['eventEmit', '手写eventEmit类'],
+            ['reactive', '手写Vue数据响应式'],
+            ['nextTick', '手写Vue nextTick'],
+            ['promise', '手写Promise']
           ]
         }
       ],
@@ -193,34 +176,38 @@ module.exports = {
           ]
         }
       ],
-      '/browser/browser/': [
+      '/browser/': [
+        {
+          title: '浏览器工作原理与实践',
+          collapsable: true,
+          children: [
+            ['theory/', '原理']
+          ]
+        },
         {
           title: '浏览器',
-          collapsable: false,
+          collapsable: true,
           children: [
-            ['', '浏览器'],
-            ['jsonp', 'JSONP'],
-            ['url', 'URL输入到返回请求的过程'],
-            ['cache', '浏览器缓存'],
-            ['composite', '层合成']
+            ['browser/jsonp', 'JSONP'],
+            ['browser/url', 'URL输入到返回请求的过程'],
+            ['browser/cache', '浏览器缓存'],
+            ['browser/composite', '层合成'],
+            ['browser/event', '事件机制/模型'],
+            ['browser/cors', '跨域']
           ]
-        }
-      ],
-      '/browser/http/': [
+        },
         {
-          title: 'http',
-          collapsable: false,
+          title: 'HTTP',
+          collapsable: true,
           children: [
-            ['', '一个数据包在网络中的心路历程']
+            ['http/', '一个数据包在网络中的心路历程']
           ]
-        }
-      ],
-      '/browser/security/': [
+        },
         {
           title: '网络安全',
-          collapsable: false,
+          collapsable: true,
           children: [
-            ['', '网络安全']
+            ['security/', '网络安全']
           ]
         }
       ],

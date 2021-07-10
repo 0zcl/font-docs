@@ -5,19 +5,19 @@
 
 Etag
 
-![Etag](@assets/http&browser/10.png)
+![Etag](@assets/browser/browser/10.png)
 
 If-None-Match
 
-![If-None-Match](@assets/http&browser/11.png)
+![If-None-Match](@assets/browser/browser/11.png)
 
 Last-Modified
 
-![Last-Modified](@assets/http&browser/12.png)
+![Last-Modified](@assets/browser/browser/12.png)
 
 If-Modified-Since
 
-![If-Modified-Since](@assets/http&browser/13.png)
+![If-Modified-Since](@assets/browser/browser/13.png)
 
 ## 什么是from disk cache和from memory cache ？什么时候会触发？
 强缓存时会触发。
