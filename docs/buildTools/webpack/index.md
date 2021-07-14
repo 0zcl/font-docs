@@ -390,6 +390,162 @@ function() {
 ```
 ![comiler-done](@assets/webpack/23.png)
 
+## 构建分析
+### 初级分析
+运行命令，就会在根目录生成一个stats.json文件，可以查看分析结果。这种方式只是初级分析，颗粒度较大。
+```js
+"build:stats": "webpack --config webpack.prod.js --json > stats.json"
+```
+### 速度分析
+```js
+// 安装
+npm install --save-dev speed-measure-webpack-plugin
+
+// 使用方式
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+ 
+const smp = new SpeedMeasurePlugin();
+const webpackConfig = smp.wrap({
+  plugins: [
+    new MyPlugin(),
+    new MyOtherPlugin()
+  ]
+});
+```
+配置好之后，运行打包命令的时候就可以看到每个loader 和插件执行耗时
+
+### 体积分析
+```js
+// 安装
+npm install --save-dev webpack-bundle-analyzer
+
+// 使用
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+ 
+module.exports = {
+  plugins: [
+    new BundleAnalyzerPlugin()
+  ]
+}
+```
+
+## 资源并行解析
+### thread-loader
+原理：每次 webpack 解析一个模块，thread-loader 会将它及它的依赖分配给 worker 线程中。
+```js
+// 使用方式
+module.exports={
+    ...
+    module:{
+        rules:[
+        {
+            test:/\.js$/,
+            use:[{
+                loader:'thread-loader',
+                options:{
+                    workers: 3
+                }
+            },
+            'babel-loader'
+            ]
+        }]
+    }
+    ...
+}
+```
+### terser-webpack-plugin
+parallel: true，默认使用多进程并发运行以提高构建速度
+```js
+npm install terser-webpack-plugin --save-dev
+const TerserPlugin = require('terser-webpack-plugin');
+module.exports = {
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+      }),
+    ],
+  },
+};
+```
+
+## DLL
+思路：分享基础包。将 react、react-dom、redux、react-redux 等打包成一个文件
+方法：使用 <code>DLLPlugin</code> 进行分包，<code>DLLReferencePlugin</code> 对 manifest.json 引用
+```js
+// webpack.dll.js
+const path = require('path');
+const webpack = require('webpack');
+
+module.exports = {
+    entry: {
+        library: [
+            'react',
+            'react-dom'
+        ]
+    },
+    output: {
+        filename: '[name]_[chunkhash].dll.js',
+        path: path.join(__dirname, 'build/library'),
+        library: '[name]'
+    },
+    plugins: [
+        new webpack.DllPlugin({
+            name: '[name]_[hash]',
+            path: path.join(__dirname, 'build/library/[name].json')
+        })
+    ]
+};
+```
+
+```js
+// package.json
+"dll": "webpack --config webpack.dll.js",
+// webpack.conf.js
+plugins: [
+  new webpack.DllReferencePlugin({
+    manifest: require('./build/library/library.json')
+  })
+]
+```
+
+## 缓存二次构建提速
+利用缓存提升二次构建速度
+* babel-loader 开启缓存
+* terser-webpack-plugin 开启缓存
+* 使用 cache-loader 或者 hard-source-webpack-plugin
+
+## 缩小构建目标
+1. 比如babel-loaader不去解析node_modules
+```js
+module.exports={
+  module:{
+    rules:[
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: 'node_modules'
+      }
+    ]
+  }
+}
+```
+2. 减少文件搜索范围
+```js
+module.exports = {
+  resolve: {
+    alias: {
+      react: path.resolve(__dirname, "./node_modules/react/dist/react.min.js")
+    },
+    modules: [path.resolve(__dirname, "node_modules")],  // 减少模块搜索层级
+    extensions: [".js"],
+    mainFields: ["main"]  // 查找时直接找 package.json 的 main 字段
+  }
+}
+```
+
+
 ## 面试
 问：说说less-loader、css-loader、style-loader的作用
 

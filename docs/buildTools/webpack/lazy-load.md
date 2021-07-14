@@ -1,19 +1,15 @@
-## webpack懒加载原理
-
-## 示例
 ```js
 // test.js
 export default function test2() {
   console.log('test2')
 }
-```
-```js
+
 // index.js
 function test() {}
 test()
 import('./test2')
-
 ```
+
 打包后：
 ```js
 // test_test_4bd2e92a.js
@@ -339,18 +335,25 @@ installedChunks是一个对象，key为chunkId，value为chunk的状态。
 首先 创建var promise, 将[resolve, reject, Promise] 赋值给installedChunks[chunkId]。表明当前chunk正在加载中。
 
 ![webpack_require__.e](@assets/webpack/17.png)
+
 接着，创建script标签，生成4_4bd2e92a.js对应的url，script.src = url。将url赋值给script.src. 
+
 ![webpack_require__.e](@assets/webpack/18.png)
+
 再将script标签，通过<code>document.head.appendChild(script)</code>，添加到head标签中。此时请求http，加载4_4bd2e92a.js资源
+
 ![webpack_require__.e](@assets/webpack/19.png)
 
 ## webpackJsonpCallback
 install a JSONP callback for chunk loading. 当chunk加载完成之前，JSONP原理可知，会执行回调函数webpackJsonpCallback
+
 ![webpack_require__.e](@assets/webpack/20.png)
+
 webpackJsonpCallback函数的参数为 [4], { 21: f }. 说明一下。4为chunkId，21为moduleId。key为21对应的value是，模块方法。
 接着执行installedChunks[chunkId][0]()。即执行懒加载文件promise的resolve()方法。返回值是一个promise.
 
 最后，installedChunks[chunkIds[i]] = 0 . 将installedChunks[chunkId]赋值为0，表示该chunk已经加载完毕
+
 ![webpack_require__.e](@assets/webpack/21.png)
 
 
@@ -365,7 +368,10 @@ __webpack_require__.e(/* import() */ 4).then(
 
 
 ## 总结：webpack懒加载原理
-1. 使用installedChunks对象来保存chunk的加载状态。undefined表示未加载，[resolve, reject, Promise]表示加载中，0表示加载完成
+1. 使用installedChunks对象来保存chunk的加载状态。
+    * undefined表示未加载
+    * [resolve, reject, Promise]表示加载中
+    * 0表示加载完成
 2. 使用\__webpack_require__.e，参数为chunkId，来加载chunk。主要做两件事
     * 一是：创建一个promise变量，将[resolve, reject, promise变量]赋值给installedChunks[chunkId]
     * 二是：创建script标签，给script.src赋值，再将script标签append添加到head头部中。此时发起http请求，加载chunk资源
@@ -377,8 +383,8 @@ __webpack_require__.e(/* import() */ 4).then(
 
 参考：
 
-https://juejin.cn/post/6844904180285456398
-https://blog.csdn.net/l908825925/article/details/109650443
+[『Webpack系列』—— 路由懒加载的原理](https://juejin.cn/post/6844904180285456398)
+[webpack懒加载代码原理深究](https://blog.csdn.net/l908825925/article/details/109650443)
 
 
 

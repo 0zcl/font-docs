@@ -1,7 +1,5 @@
-## webpack 的模块机制
 webpack3，打包后精简的代码。只参考。下面以webpack5 打包的代码来讲解
 ![webpack_require](@assets/webpack/12.png)
-
 
 ## CommonJS 规范
 webpack 打包 使用cjs规范的js文件
@@ -183,7 +181,7 @@ var _helloworld__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
 var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 ```
 
-### __webpack_require__.r()
+## __webpack_require__.r()
 给exports对象，添加<code>__esModule</code>、<code>Symbol.toStringTag</code>这两个属性
 ```js
 __webpack_require__.r = function(exports) {
@@ -209,13 +207,13 @@ __webpack_require__.r = function(exports) {
 ```
 * \_\_webpack_require__.r(\_\_webpack_exports__)：给\_\_webpack_exports__添加Symbol.toStringTag、__esModule属性
 
-### __webpack_require__.o()
+## __webpack_require__.o()
 * \_\_webpack_require__.o(): 判断obj是否有prop属性
 ```js
 __webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
 ```
 
-### __webpack_require__.d()
+## __webpack_require__.d()
 ```js
 __webpack_require__.d = function(exports, definition) {
   for(var key in definition) {
@@ -236,7 +234,7 @@ __webpack_exports__、
 * 给module.exports添加 default 属性，对应的value为 function() { return helloworld; }
 ![webpack_require.d](@assets/webpack/14.png)
 
-### export default本质
+## export default本质
 \_\_webpack_require__.d()为什么要给module.exports添加 default 属性？ 这就要说下export default的本质
 ```js
 //a.js
@@ -253,7 +251,7 @@ import StrFile from 'a';
 
 目前为止可以发现 webpack 自定义的模块规范 也能完美适配 ES6 规范
 
-### __webpack_require__.n()
+## __webpack_require__.n()
 回顾：__webpack_require__.r() 函数的作用是给 __webpack_exports__ 添加一个 __esModule 为 true 的属性，表示这是一个 ES6 module
 添加这个属性有什么用呢? 主要是为了处理混合使用 ES6 module 和 CommonJS 的情况
 
@@ -284,7 +282,9 @@ module.exports = utils
 ## 按需加载
 也叫异步加载、动态导入，即只在有需要的时候才去下载相应的资源文件
 
-### 待总结
+见[懒加载](./lazy-load.md)
 
 
-参考：https://segmentfault.com/a/1190000024457777
+
+参考：
+[深入了解 webpack 模块加载原理](https://segmentfault.com/a/1190000024457777)

@@ -46,8 +46,8 @@ module.exports = {
         link: '/babel/'
       },
       {
-        text: 'webpack',
-        link: '/webpack/'
+        text: '打包工具',
+        link: '/buildTools/webpack/'
       },
       {
         text: 'Vue',
@@ -231,18 +231,18 @@ module.exports = {
           ]
         }
       ],
-      '/webpack/': [
+      '/buildTools/': [
         {
           title: 'webpack',
-          collapsable: false,
-          sidebarDepth: 3,
+          collapsable: true,
           children: [
-            ['', '基础用法'],
-            'module_chunk_bundle',
-            'hash',
-            'postcss',
-            ['__webpack_require__', 'webpack 模块加载原理'],
-            'lazy-load'
+            ['webpack/', '基础'],
+            ['webpack/source', '源码深入'],
+            ['webpack/module_chunk_bundle', 'module_chunk_bundle'],
+            ['webpack/hash', '文件指纹'],
+            ['webpack/postcss', 'postcss'],
+            ['webpack/__webpack_require__', 'webpack 模块加载原理'],
+            ['webpack/lazy-load', '懒加载']
           ]
         }
       ],
