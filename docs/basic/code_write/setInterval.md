@@ -1,7 +1,17 @@
 ## setTimout、setInterval
 * setTimeout()
 1. 返回值timeoutID是一个正整数，表示定时器的编号
-2. setTimeout的最短时间间隔是4毫秒
+2. 如果 setTimeout 存在嵌套调用，那么系统会设置最短时间间隔为 4 毫秒
+```js
+console.log('begin', new Date().getTime())
+setTimeout(()=> {
+  setTimeout(()=> {
+    console.log('end', new Date().getTime())
+  }, 0)
+}, 0)
+// begin: 1625994293493
+// end: 1625994293497
+```
 
 ## 为什么setTimeout不准确
 setTimeout设置了一个定时器，表示在指定时间之后才放入事件循环队队(宏任务队列)，如果此时队列中已经有其它任务，依据队列<code>先入先出原则</code>，要等前面的任务都执行完，才会执行定时器的任务。因此，setTimeout定时器任务设置的时间往往不是一个准确的时间

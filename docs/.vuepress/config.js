@@ -27,16 +27,7 @@ module.exports = {
       },
       {
         text: '基础',
-        items: [
-          {
-            text: '基础',
-            link: '/basic/basic/'
-          },
-          {
-            text: '手写代码',
-            link: '/basic/code_write/'
-          }
-        ]
+        link: '/basic/basic/'
       },
       {
         text: 'css',
@@ -114,52 +105,57 @@ module.exports = {
       }
     ],
     sidebar: {
-      '/basic/basic/': [
+      '/basic/': [
         {
           title: '基础知识',
-          collapsable: false,
+          collapsable: true,
           children: [
-            ['', '模块化'],
-            'moduleCircle',
-            ['RegExp', '正则匹配'],
-            '0.1+0.2',
-            'evenLoop',
-            ['interview', '面试']
+            ['basic/', '模块化'],
+            'basic/moduleCircle',
+            ['basic/RegExp', '正则匹配'],
+            'basic/0.1+0.2',
+            'basic/evenLoop',
+            ['basic/interview', '面试']
           ]
-        }
-      ],
-      '/basic/code_write/': [
+        },
         {
           title: '手写代码',
-          collapsable: false,
+          collapsable: true,
           children: [
-            ['', '手写类型转换'],
-            ['new', '手写new'],
-            ['copy', '手写深拷贝'],
-            ['create', '手写Object.create'],
-            ['inherit', '手写继承'],
-            ['extends', '手写extends'],
-            ['instanceof', '手写instanceof'],
-            ['call&apply&bind', '手写call、apply、bind'],
-            ['jsonp', '手写jsonp'],
-            ['getQueryString', '手写getQueryString'],
-            ['setInterval', '手写setInterval'],
-            ['debounce&throttle', '手写防抖与节流'],
-            ['for_of', '手写对象属性值迭代器'],
-            ['event_delegation', '手写事件委托'],
-            ['lazyLoad', '手写图片懒加载'],
-            ['ajax', '手写原生Ajax请求'],
-            ['aop', '手写AOP装饰函数'],
-            ['curry', '手写柯里函数'],
-            ['timeChunk', '手写分时函数'],
-            ['flat', '手写数组扁平化flat'],
-            ['repeat', '手写数组去重'],
-            ['eventEmit', '手写eventEmit类'],
-            ['reactive', '手写Vue数据响应式'],
-            ['nextTick', '手写Vue nextTick'],
-            ['promise', '手写Promise']
+            ['code_write/', '手写类型转换'],
+            ['code_write/new', '手写new'],
+            ['code_write/copy', '手写深拷贝'],
+            ['code_write/create', '手写Object.create'],
+            ['code_write/inherit', '手写继承'],
+            ['code_write/extends', '手写extends'],
+            ['code_write/instanceof', '手写instanceof'],
+            ['code_write/call&apply&bind', '手写call、apply、bind'],
+            ['code_write/jsonp', '手写jsonp'],
+            ['code_write/getQueryString', '手写getQueryString'],
+            ['code_write/setInterval', '手写setInterval'],
+            ['code_write/debounce&throttle', '手写防抖与节流'],
+            ['code_write/for_of', '手写对象属性值迭代器'],
+            ['code_write/event_delegation', '手写事件委托'],
+            ['code_write/lazyLoad', '手写图片懒加载'],
+            ['code_write/ajax', '手写原生Ajax请求'],
+            ['code_write/aop', '手写AOP装饰函数'],
+            ['code_write/curry', '手写柯里函数'],
+            ['code_write/timeChunk', '手写分时函数'],
+            ['code_write/flat', '手写数组扁平化flat'],
+            ['code_write/repeat', '手写数组去重'],
+            ['code_write/eventEmit', '手写eventEmit类'],
+            ['code_write/reactive', '手写Vue数据响应式'],
+            ['code_write/nextTick', '手写Vue nextTick'],
+            ['code_write/promise', '手写Promise']
           ]
-        }
+        },
+        {
+          title: 'JS底层深入',
+          collapsable: true,
+          children: [
+            ['js/', 'JS底层']
+          ]
+        },
       ],
       '/css/': [
         {
@@ -200,14 +196,17 @@ module.exports = {
           title: 'HTTP',
           collapsable: true,
           children: [
-            ['http/', '一个数据包在网络中的心路历程']
+            ['http/', '一个数据包在网络中的心路历程'],
+            ['http/http', 'http相关'],
+            ['http/https', 'https']
           ]
         },
         {
           title: '网络安全',
           collapsable: true,
           children: [
-            ['security/', '网络安全']
+            ['security/', '摘要'],
+            ['security/sandbox', '安全沙箱']
           ]
         }
       ],
