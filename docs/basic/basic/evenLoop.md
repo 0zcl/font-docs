@@ -1,5 +1,3 @@
-## 事件循环
-
 ## 浏览器中的事件循环
 JavaScript代码的执行过程中，除了依靠函数调用栈来搞定函数的执行顺序外，还依靠任务队列(task queue)来搞定另外一些代码的执行。整个执行过程，我们称为事件循环过程。一个线程中，事件循环是唯一的，但是任务队列可以拥有多个。任务队列又分为macro-task（宏任务）与micro-task（微任务）
 
@@ -103,10 +101,11 @@ console.log('script end')
 执行顺序：
 script start -> async2 end -> Promise -> script end -> async2 end1 -> promise1 -> promise2 -> async1 end -> setTimeout
 
-## node事件循环
+## node事件循环(未完成理解)
 ### 整体理解
 node 事件循环简化图
 ![node_evenloop](@assets/basic/5.png)
+
 图中的每个框被称为事件循环机制的一个阶段，每个阶段都有一个 FIFO 队列来执行回调。虽然每个阶段都是特殊的，但通常情况下，当事件循环进入给定的阶段时，它将执行特定于该阶段的任何操作，然后执行该阶段队列中的回调，直到队列用尽或最大回调数已执行。当该队列已用尽或达到回调限制，事件循环将移动到下一阶段。
 
 ### 阶段概述
@@ -128,6 +127,7 @@ node 事件循环简化图
         * 如果有 setImmediate 回调需要执行，poll 阶段会停止并且进入到 check 阶段执行回调
         * 如果没有 setImmediate 回调需要执行，会等待回调被加入到队列中并立即执行回调，这里同样会有个超时时间设置防止一直等待下去,一段时间后自动进入 check 阶段。
 * check: 直接执行 setImmdiate 的回调
+
 ![poll](@assets/basic/6.png)
 
 ### process.nextTick
@@ -179,4 +179,4 @@ node11及其之后 版本一旦执行一个阶段里的一个宏任务(setTimeou
 
 参考：
 https://www.yuque.com/yanghui-xazj3/uu7edw/wnhh46
-https://mp.weixin.qq.com/s?__biz=MzI0MzIyMDM5Ng==&mid=2649826653&idx=1&sn=9e5e2de78a8ef4de3820769ff3ab7c02&chksm=f175ef9ec60266880a86f33085ff43f95e3180846c5f139cb9b1b33c3245201157f39d949e9a&scene=21#wechat_redirect
+[语雀](https://mp.weixin.qq.com/s?__biz=MzI0MzIyMDM5Ng==&mid=2649826653&idx=1&sn=9e5e2de78a8ef4de3820769ff3ab7c02&chksm=f175ef9ec60266880a86f33085ff43f95e3180846c5f139cb9b1b33c3245201157f39d949e9a&scene=21#wechat_redirect)

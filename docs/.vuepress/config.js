@@ -107,15 +107,12 @@ module.exports = {
     sidebar: {
       '/basic/': [
         {
-          title: '基础知识',
+          title: '基础',
           collapsable: true,
           children: [
-            ['basic/', '模块化'],
-            'basic/moduleCircle',
-            ['basic/RegExp', '正则匹配'],
-            'basic/0.1+0.2',
-            'basic/evenLoop',
-            ['basic/interview', '面试']
+            ['basic/interview', '基础题'],
+            ['basic/', '0.1+0.2等于0.3吗'],
+            ['basic/evenLoop', '事件循环']
           ]
         },
         {
@@ -123,6 +120,7 @@ module.exports = {
           collapsable: true,
           children: [
             ['code_write/', '手写类型转换'],
+            ['code_write/accumulation', '手写累加/累乘函数'],
             ['code_write/new', '手写new'],
             ['code_write/copy', '手写深拷贝'],
             ['code_write/create', '手写Object.create'],
@@ -216,7 +214,8 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['', '基础']
+            ['', '基础'],
+            ['module', '模块化机制']
           ]
         }
       ],
@@ -226,8 +225,10 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['', 'Introduction'],
-            'Babel_VS_Ts'
+            ['', '摘要'],
+            ['Babel_VS_Ts', 'Babel与Ts'],
+            ['uglify', '代码压缩原理'],
+            ['plugin', 'Babel原理']
           ]
         }
       ],

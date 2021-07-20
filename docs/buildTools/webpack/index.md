@@ -143,9 +143,9 @@ module.exports = {
 ## tree shaking
 Tree shaking 是一种通过清除多余代码方式来优化项目打包体积的技术，专业术语叫 Dead code elimination
 
-1 个模块可能有多个⽅法，只要其中的某个⽅法使⽤到了，则整个⽂件都会被打到 bundle ⾥⾯去，tree shaking 就是只把⽤到的⽅法打⼊ bundle。webpack 在生产环境 默认支持 tree shaking.
+1 个模块可能有多个⽅法，只要其中的某个⽅法使⽤到了，则整个⽂件都会被打到 bundle ⾥⾯去，tree shaking 就是<code>只把⽤到的⽅法打⼊ bundle</code>。webpack 在生产环境 默认支持 tree shaking.
 
-### DCE (Dead code elimination)
+### DCE (Dead code elimination)一般具有以下几个特征
 * 代码不会被执⾏，不可到达
 * 代码执⾏的结果不会被⽤到
 * 代码只会影响死变量（只写不读）
