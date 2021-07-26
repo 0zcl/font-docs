@@ -238,12 +238,18 @@ module.exports = {
           collapsable: true,
           children: [
             ['webpack/', '基础'],
-            ['webpack/source', '源码深入'],
             ['webpack/module_chunk_bundle', 'module_chunk_bundle'],
             ['webpack/hash', '文件指纹'],
             ['webpack/postcss', 'postcss'],
+            ['webpack/source', '源码深入'],
+            ['webpack/zcl-pack', '手写简易webpack'],
+            ['webpack/loader', 'webpack-loader机制'],
+            ['webpack/plugin', 'webpack-插件机制'],
             ['webpack/__webpack_require__', 'webpack 模块加载原理'],
-            ['webpack/lazy-load', '懒加载']
+            ['webpack/lazy-load', '懒加载'],
+            ['webpack/HMR', '热更新原理'],
+            ['webpack/proxy', 'webpack proxy原理'],
+            ['webpack/performance', 'webpack性能优化']
           ]
         }
       ],
