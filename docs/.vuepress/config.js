@@ -111,8 +111,7 @@ module.exports = {
           collapsable: true,
           children: [
             ['basic/interview', '基础题'],
-            ['basic/', '0.1+0.2等于0.3吗'],
-            ['basic/evenLoop', '事件循环']
+            ['basic/', '0.1+0.2等于0.3吗']
           ]
         },
         {
@@ -214,8 +213,13 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['', '基础'],
-            ['module', '模块化机制']
+            ['', 'glob'],
+            ['module', '模块化机制'],
+            ['eventLoop', '事件循环'],
+            ['micro-font', '微前端'],
+            ['koa', 'KOA2框架原理'],
+            ['child_process', 'Node子进程'],
+            ['cluster', 'cluster原理']
           ]
         }
       ],
@@ -343,8 +347,9 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['', 'Introduction'],
-            'binaryTree'
+            ['leetcode', 'leetcode']
+            // ['', 'Introduction'],
+            // 'binaryTree'
           ]
         }
       ]
