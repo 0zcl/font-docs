@@ -79,6 +79,10 @@ module.exports = {
         link: '/code-reviews/'
       },
       {
+        text: '项目',
+        link: '/project/B/batch_download'
+      },
+      {
         text: '工具',
         items: [
           {
@@ -350,6 +354,39 @@ module.exports = {
             ['leetcode', 'leetcode']
             // ['', 'Introduction'],
             // 'binaryTree'
+          ]
+        }
+      ],
+      '/project/': [
+        {
+          title: 'B端',
+          collapsable: true,
+          children: [
+            ['B/batch_download', '批量下载图片'],
+            ['B/hll-compoments', '业务组件库'],
+            ['B/common-utils', '公共组件库'],
+            ['B/i61-element-ui', '公司通用UI组件'],
+            ['B/common-web-system', '微前端系统'],
+            ['B/micro-app', '微应用工具库']
+          ]
+        },
+        {
+          title: '移动端H5',
+          collapsable: true,
+          children: [
+            ['H5/draw-h5', 'vue移动端多页面'],
+            ['H5/mobile-ui', '移动端UI组件库'],
+            ['H5/h5-sdk', 'h5-sdk'],
+            ['H5/common-login-h5', '统一登陆'],
+            ['H5/pay-center', '支付中心组件']
+          ]
+        },
+        {
+          title: '工具',
+          collapsable: true,
+          children: [
+            ['tools/util-library', '公共函数库'],
+            ['tools/zcl-cli', 'cli脚手架工具']
           ]
         }
       ]
