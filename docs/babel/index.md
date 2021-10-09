@@ -14,31 +14,7 @@ Babel摘要能加深对Babel理解，加深Babel工程化配置理解。工程�
 重点要学习的参数项有<code>targets</code>、<code>useBuiltIns</code>、<code>modules</code>和<code>corejs</code>这四个，能掌握这几个参数项的真正含义，就已经超过绝大部分开发者了
 * target: 设置了target，就不使用<code>browserslist</code>配置。不设置targets，那么就使用browserslist的配置。正常情况下，我们推荐使用browserslist的配置而很少单独配置@babel/preset-env的targets
 * useBuiltIns："usage" | "entry" | false。默认取false. 
-   * false: 没有配置该参数项或是取值为false的时候，polyfill会全部引入到最终的代码里
-    打包后的js文件
-    ```javascript
-    "use strict";
-    require("core-js/stable");
-    require("regenerator-runtime/runtime");
-    const a = new Promise((reslove, reject) => {
-      console.log('1111111');
-    }); // fn()
-    ```
-    进入core-js/stable查看源码
-    ```javascript
-    require('../es');
-    require('../web');
-    var path = require('../internals/path');
-
-    module.exports = path;
-    ```
-    查看require('../es')，引入了es语法的各种polyfill
-    ```javascript
-    require('../modules/es.symbol');
-    require('../modules/es.symbol.async-iterator');
-    require('../modules/es.symbol.description');
-    .... // 太多，以下忽略
-    ```
+  * false: 没有配置该参数项或是取值为false的时候，不做polyfill
   * "entry": 考虑目标环境缺失的API模块, 引入相关的API补齐模块(polyfill)
   * "usage": Babel除了会考虑目标环境缺失的API模块，同时考虑我们项目代码里使用到的ES6特性。只有我们使用到的ES6特性API在目标环境缺失的时候，Babel才会引入core-js的API补齐模块。usage不需要我们在入口文件（以及webpack的entry入口项）引入polyfill，Babel发现useBuiltIns的值是"usage"后，会自动进行polyfill的引入
     源代码。注意：这里并没有引入polyfill

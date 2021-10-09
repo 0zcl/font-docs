@@ -374,10 +374,10 @@ module.exports = {
           title: '移动端H5',
           collapsable: true,
           children: [
+            ['H5/common-login-h5', '统一登陆'],
+            ['H5/h5-sdk', 'h5-sdk'],
             ['H5/draw-h5', 'vue移动端多页面'],
             ['H5/mobile-ui', '移动端UI组件库'],
-            ['H5/h5-sdk', 'h5-sdk'],
-            ['H5/common-login-h5', '统一登陆'],
             ['H5/pay-center', '支付中心组件']
           ]
         },
