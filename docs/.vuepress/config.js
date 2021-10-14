@@ -83,6 +83,10 @@ module.exports = {
         link: '/project/B/batch_download'
       },
       {
+        text: '前沿',
+        link: '/news/vue3'
+      },
+      {
         text: '工具',
         items: [
           {
@@ -99,6 +103,11 @@ module.exports = {
             text: '移动端多页面模版',
             target:'_blank',
             link: 'https://github.com/0zcl/h5_template'
+          },
+          {
+            text: '移动端组件库',
+            target:'_blank',
+            link: 'https://github.com/0zcl/zcl-mobile-ui'
           },
           {
             text: 'zcl脚手架',
@@ -376,7 +385,7 @@ module.exports = {
           children: [
             ['H5/common-login-h5', '统一登陆'],
             ['H5/h5-sdk', 'h5-sdk'],
-            ['H5/draw-h5', 'vue移动端多页面'],
+            ['H5/h5-template', 'vue移动端多页面'],
             ['H5/mobile-ui', '移动端UI组件库'],
             ['H5/pay-center', '支付中心组件']
           ]
@@ -387,6 +396,18 @@ module.exports = {
           children: [
             ['tools/util-library', '公共函数库'],
             ['tools/zcl-cli', 'cli脚手架工具']
+          ]
+        }
+      ],
+      '/news/': [
+        {
+          title: '前沿',
+          collapsable: false,
+          sidebarDepth: 3,
+          children: [
+            ['vue3', 'vue3']
+            // ['', 'Introduction'],
+            // 'binaryTree'
           ]
         }
       ]
