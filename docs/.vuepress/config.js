@@ -11,8 +11,9 @@ const fs = require('fs')
 
 
 module.exports = {
-  title: '前端小册',
-  description: 'Just playing around',
+  base: '/zcl/',
+  title: '亮神前端小册',
+  description: '亮神前端小册',
   themeConfig: {
     repo: 'https://github.com/0zcl',
     // editLinks: true,
