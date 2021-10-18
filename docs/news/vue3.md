@@ -28,8 +28,9 @@ nextTick(() => {})
   * 命名冲突
   * 数据来源不清晰
 
-  vue3 可以编写可复用的hook函数，实现代码复用
+  vue3 可以编写可复用的hook函数(useXXX)，实现代码复用
 
+## 编译优化
 ```js
 <p :style="{ color: color }">name: {{name}}</p>
 
@@ -42,7 +43,9 @@ if (patchFlag & PatchFlags.TEXT) {
   }
 }
 ```
-如果此时的 name 发生了修改，p 节点进入了 diff 阶段，此时会将判断 <code>patchFlag & PatchFlags.TEXT</code> ，当元素只有动态文本子元素时，将匹配此标志。然后才做TEXT的更新
+如果此时的 name 发生了修改，p 节点进入了 diff 阶段，此时会将判断结点的 <code>patchFlag & PatchFlags.TEXT</code> ，当元素只有动态文本子元素时，将匹配此标志。然后才做TEXT的更新
+
+
 
 参考：
 [v3官网](https://v3.cn.vuejs.org/guide/migration/v-model.html#%E8%BF%81%E7%A7%BB%E7%AD%96%E7%95%A5)

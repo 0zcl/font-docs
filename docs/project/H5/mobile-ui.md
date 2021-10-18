@@ -2,7 +2,7 @@
 H5开发过程中出现重复开发组件和功能，导致重复开发和测试。通过<code>vant3</code>, <code>vant-cli</code>，<code>vue3</code>开发移动端组件库，抽离公共组件的方式解决该问题。大大提高了H5的开发和测试效率。
 
 ## 实现
-使用<code>vant-cli</code>搭建基础模版。通过 Vant Cli 可以快速搭建一套功能完备的 Vue 组件库
+使用[vant-cli](https://github.com/youzan/vant/tree/dev/packages/vant-cli)搭建基础模版。通过 Vant Cli 可以快速搭建一套功能完备的 Vue 组件库
 ```js
 yarn create vant-cli-app
 ```
@@ -30,7 +30,7 @@ createApp(App).use(mobileUI)
 
 vant-cli中使用wepack进行打包。想使用<code>resolve.alias</code>添加路径别名，但不知how to do? 只能看vant-cli源码
 
-### vant-cli源码简析
+## vant-cli源码简析
 通过分析<code>vant-cli dev</code>: bin.js --> dev.js --> compile-site.js --> webpack.site.dev.js
 ```js
 // @vant/cli/lib/common/constant.js

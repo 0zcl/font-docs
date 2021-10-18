@@ -387,7 +387,7 @@ module.exports = {
             ['H5/h5-sdk', 'h5-sdk'],
             ['H5/h5-template', 'vue移动端多页面'],
             ['H5/mobile-ui', '移动端UI组件库'],
-            ['H5/pay-center', '支付中心组件']
+            ['H5/pay-center', '支付中心']
           ]
         },
         {
@@ -405,7 +405,8 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['vue3', 'vue3']
+            ['vue3', 'vue3'],
+            ['vite', 'vite']
             // ['', 'Introduction'],
             // 'binaryTree'
           ]
