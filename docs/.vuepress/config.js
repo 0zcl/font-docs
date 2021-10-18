@@ -11,7 +11,7 @@ const fs = require('fs')
 
 
 module.exports = {
-  base: '/zcl/',
+  base: '/font-docs/',
   title: '亮神前端小册',
   description: '亮神前端小册',
   themeConfig: {
