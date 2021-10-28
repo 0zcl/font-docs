@@ -375,9 +375,8 @@ module.exports = {
             ['B/batch_download', '批量下载图片'],
             ['B/hll-compoments', '业务组件库'],
             ['B/common-utils', '公共组件库'],
-            ['B/i61-element-ui', '公司通用UI组件'],
-            ['B/common-web-system', '微前端系统'],
-            ['B/micro-app', '微应用工具库']
+            ['B/sso-login', '单点登录'],
+            ['B/common-web-system', '微前端系统']
           ]
         },
         {
