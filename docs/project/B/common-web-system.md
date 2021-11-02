@@ -328,8 +328,9 @@ div[data-qiankun-react16] .app-main {
 }
 ```
 
-3. 怎么处理JS隔离？
+## 3. 怎么处理JS隔离？
 ```js
+const useLooseSandbox = typeof sandbox === 'object' && !!sandbox.loose;
 // src/sandbox/index.ts
 export function createSandboxContainer(
   appName: string,
@@ -348,8 +349,179 @@ export function createSandboxContainer(
   // ...
 }
 ```
+浏览器不支持Proxy，使用<code>SnapshotSandbox</code>快照沙箱；支持Proxy的话，默认使用<code>ProxySandbox</code>。如果sandbox配置loose，才用<code>LegacySandbox</code>沙箱，不过官方文档没有loose的说明。
 
+![proxy_sandbox](@assets/project/37.png)
+### SnapshotSandbox快照沙箱
+1. 激活时保存window快照信息到windowSnapshot，modifyPropsMap保存激活期间修改的信息，
+2. 如果modifyPropsMap有数据，需要把window还原到上次的状态；激活期间可以修改window的数据；
+3. 退出激活状态，对比window和快照windowSnapshot，把修改的信息存到modifyPropsMap，并还原window的状态，即windowSanpshot的状态
+```js
+const iter = (window, callback) => {
+  for (const prop in window) {
+    if(window.hasOwnProperty(prop)) {
+      callback(prop);
+    }
+  }
+}
+class SnapshotSandbox {
+  constructor() {
+    this.proxy = window;
+    this.modifyPropsMap = {};
+  }
+  // 激活沙箱
+  active() {
+    // 缓存active状态的window
+    this.windowSnapshot = {};
+    iter(window, (prop) => {
+      this.windowSnapshot[prop] = window[prop];
+    });
+    Object.keys(this.modifyPropsMap).forEach(p => {
+      window[p] = this.modifyPropsMap[p];
+    })
+  }
+  // 退出沙箱
+  inactive(){
+    iter(window, (prop) => {
+      if(this.windowSnapshot[prop] !== window[prop]) {
+        // 记录变更
+        this.modifyPropsMap[prop] = window[prop];
+        // 还原window
+        window[prop] = this.windowSnapshot[prop];
+      }
+    })
+  }
+}
+```
+snapshotSandbox会污染全局window，但是可以支持不兼容Proxy的浏览器
 
+### LegacySandbox
+LegacySandbox使用三次参数来记录，实现消息JS沙箱
+* addedPropsMapInSandbox: 记录新增的属性全局
+* modifiedPropsOriginalValueMapInSandbox：记录修改的属性的初始值。
+* currentUpdatedPropsValueMap：记录激活状态下修改属性的最终值，即属性多次修改，记录最后一次修改的数据
+:::details
+```js
+class Legacy {
+  constructor() {
+    // 沙箱期间新增的全局变量
+    this.addedPropsMapInSandbox = {};
+    // 沙箱期间更新的全局变量
+    this.modifiedPropsOriginalValueMapInSandbox = {};
+    // 持续记录更新的(新增和修改的)全局变量的 map，用于在任意时刻做 snapshot
+    this.currentUpdatedPropsValueMap = {};
+    const rawWindow = window;
+    const fakeWindow = Object.create(null);
+    this.sandboxRunning = true;
+    const proxy = new Proxy(fakeWindow, {
+      set: (target, prop, value) => {
+        // 如果是激活状态
+        if(this.sandboxRunning) {
+          // 判断当前window上存不存在该属性
+          if(!rawWindow.hasOwnProperty(prop)) {
+            // 记录新增值
+            this.addedPropsMapInSandbox[prop] = value;
+          } else if(!this.modifiedPropsOriginalValueMapInSandbox[prop]) {
+            // 记录更新值的初始值
+            const originValue = rawWindow[prop]
+            this.modifiedPropsOriginalValueMapInSandbox[prop] = originValue;
+          }
+          // 纪录此次修改的属性
+          this.currentUpdatedPropsValueMap[prop] = value;
+          // 将设置的属性和值赋给了当前window，还是污染了全局window变量
+          rawWindow[prop] = value;
+          return true;
+        }
+        return true;
+      },
+      get: (target, prop) => {
+        return rawWindow[prop];
+      }
+    })
+    this.proxy = proxy;
+  }
+  active() {
+    if (!this.sandboxRunning) {
+      // 还原上次修改的值
+      for(const key in this.currentUpdatedPropsValueMap) {
+        window[key] = this.currentUpdatedPropsValueMap[key];
+      }
+    }
+
+    this.sandboxRunning = true;
+  }
+  inactive() {
+    // 将更新值的初始值还原给window
+    for(const key in this.modifiedPropsOriginalValueMapInSandbox) {
+      window[key] = this.modifiedPropsOriginalValueMapInSandbox[key];
+    }
+    // 将新增的值删掉
+    for(const key in this.addedPropsMapInSandbox) {
+      delete window[key];
+    }
+
+    this.sandboxRunning = false;
+  }
+}
+```
+:::
+同样会对window造成污染，但是性能比快照沙箱好，不用遍历window对象
+### ProxySandbox代理沙箱
+* 激活沙箱后，每次对window取值的时候，先从自己沙箱环境的fakeWindow里面找，如果不存在，就从rawWindow(外部的window)里去找；
+* 当对沙箱内部的window对象赋值的时候，会直接操作fakeWindow，而不会影响到rawWindow
+![proxySandbox](@assets/project/38.png)
+```js
+class ProxySandbox {
+  constructor() {
+    const rawWindow = window
+    const fakeWindow = {}
+    const proxy = new Proxy(fakeWindow, {
+      get: (target, prop) => {
+        const value = prop in target ? target[prop] : rawWindow[prop]
+        return value
+      },
+      // set代理应当返回一个布尔值。严格模式下，set代理如果没有返回true，就会报错
+      set: (target, prop, value) => {
+        if (this.sandboxRunning) {
+          target[prop] = value
+          return true
+        }
+      }
+    })
+    this.sandboxRunning = true
+    this.proxy = proxy
+  }
+  active() {
+    this.sandboxRunning = true
+  }
+  inactive() {
+    this.sandboxRunning = false
+  }
+}
+
+// 测试
+  window.sex = '男';
+  let proxy1 = new ProxySandbox();
+  let proxy2 = new ProxySandbox();
+  ((window) => {
+    proxy1.active();
+    console.log('修改前proxy1的sex', window.sex);
+    window.sex = '女';
+    console.log('修改后proxy1的sex', window.sex);
+  })(proxy1.proxy);
+  console.log('外部window.sex=>1', window.sex);
+
+  ((window) => {
+    proxy2.active();
+    console.log('修改前proxy2的sex', window.sex);
+    window.sex = '111';
+    console.log('修改后proxy2的sex', window.sex);
+  })(proxy2.proxy);
+  console.log('外部window.sex=>2', window.sex);
+```
+![proxy](@assets/project/39.png)
+
+不会污染全局window，支持多个子应用同时加载。六一工作台的微前端JS隔离是用ProxySandbox方案
 ## 总结
 
 
@@ -360,3 +532,5 @@ export function createSandboxContainer(
 [HTML Entry 源码分析](https://juejin.cn/post/6885212507837825038#heading-3)
 
 [说说微前端JS沙箱实现的几种方式](https://juejin.cn/post/6981374562877308936)
+
+[15分钟快速理解qiankun的js沙箱原理及其实现](https://juejin.cn/post/6920110573418086413#heading-0)

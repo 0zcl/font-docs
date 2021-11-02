@@ -334,7 +334,7 @@ module.exports = {
               title: '整体流程',
               path: '/vue/whole-process/',
               children: [
-                '',
+                ['', '生命周期'],
                 ['use', '插件注册'],
                 ['mixin', '混入'],
                 ['filter', '过滤器'],
