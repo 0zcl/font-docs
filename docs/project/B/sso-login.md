@@ -94,9 +94,33 @@ HMACSHA256(
 
 ![jwt](@assets/project/34.png)
 
+## 面试
+问：不同域名共享cookie
+
+答：
+1. 挂在一个主域名下，那么子域名可以共享主域名的cookie. 
+如：主域名：<code>.61info.cn</code>  子域名：<code>manager-test.61info.cn</code>和<code>sso-login-test.61info.cn</code>
+
+2. 添加cookie时设置domain。domain需要是当前域名的域名。本质原理还是子域名可以共享主域名的cookie
+如：在<code>https://manager-test.61info.cn/</code>域名下，添加cookie, domain为主域名61info.cn。则子域名实现cookie共享
+```js
+// https://manager-test.61info.cn/ 域名下
+document.cookie = "example=zcl;domain=61info.cn"
+```
+
+问：单点登陆的实现方法
+
+答：
+单点登陆SSO：一次登陆，就可以访问多个系统
+
+1. cookie共享（多个系统子域名相同）。登陆后把登陆信息(sessionId, token...)存在主域名的cookie中，子域名共享主域名的cookie，实现自动登陆。
+2. url带登陆的token（多个系统域名不同）。sso界面登陆成功后跳到子应用时url带上token。子应用拿到token后，保存在本地(建议localstorage)。进入子应用时，通过本地的token实现自动登陆
+
+
 
 [傻傻分不清之 Cookie、Session、Token、JWT](https://juejin.cn/post/6844904034181070861#heading-18)
 [JSON Web Token 入门教程](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)
+[你真的了解 Cookie 和 Session 吗](https://juejin.cn/post/6844903842773991431#heading-0)
 
 <style scoped>
 img {

@@ -1,4 +1,7 @@
 ## CSS画0.5px 细线
+![1px](@assets/css/3.png)
+
+Chrome把0.5px四舍五入变成了1px。用scale缩放来画0.5px
 ```css
   .line {
     height: 0.5px;
@@ -6,6 +9,7 @@
     background: red;
   }
 ```
+
 <div class="line"></div>
 
 ```css
@@ -17,9 +21,6 @@
   }
 ```
 <div class="line_2"></div>
-Chrome的效果如下：
-
-![1px](@assets/css/3.png)
 
 
 ## 单行／多行文本溢出的省略

@@ -99,6 +99,12 @@ a 链接的 rel 属性值都使用了 <code>noopener</code> 和 <code>noreferrer
 * async标记的 JS 加载完成后，就执行。
 * defer标记的 JS 加载完成后，需等待HTML解析完成后，才执行
 
+:::tip
+如果第三方服务商出现了一些小问题，比如延迟之类的，就会使得页面白屏。
+好在script提供了两种方式来解决上述问题，async和defer，这两个属性使得script都不会阻塞DOM的渲染
+:::
+
+
 
 ## css如何影响首次加载的白屏时间？
 ![render](@assets/browser/theory/13.png)

@@ -19,10 +19,10 @@ JSON.parse(JSON.stringify(xxx)) 实现深拷贝，会有什么问题吗？
 答：
 原理：用<code>JSON.stringify</code>把JS对象转成<code>JSON字符串</code>，再用<code>JSON.parse</code>把JSON字符串转成 JS对象
 <strong>存在问题</strong>
-1. 会忽略 <code>undefined</code>, <code>Symbol</code>
-2. 不能序列化函数
+1. 会忽略 <code>undefined</code>, <code>Symbol</code>。会忽略
+2. 不能序列化函数。会忽略
 3. 处理循环引用的对象会出错
-4. 不能正确处理new Date()
+4. 不能正确处理new Date()。把对象变成了string
 5. 不能处理正则. 正则会变成空对象 {}
 
 ```js

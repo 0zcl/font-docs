@@ -1,5 +1,6 @@
 ## http1.0
 <code>HTTP1.0</code> 特性
+无状态。HTTP1.0规定浏览器和服务器保持短暂的连接，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器处理完成后立即断开TCP连接
 
 1. 支持多种类型的文件下载
 2. 状态码
@@ -8,8 +9,17 @@
 ## http1.1
 1. 持久连接: 一个TCP连接可以传输多个HTTP请求，只要浏览器或者服务器没有明确断开连接，那么TCP连接会一直保持
 
-<img src="@assets/browser/http/1.png" style="width: 49%; vertical-align: middle;">
-<img src="@assets/browser/http/2.png" style="width: 49%; vertical-align: middle;">
+<div style="display: flex">
+  <div>
+    <p>HTTP1.0</p>
+    <img src="@assets/browser/http/1.png" style="display: block">
+  </div>
+  <div>
+    <p>HTTP1.1</p>
+    <img src="@assets/browser/http/2.png" style="display: block">
+  </div>
+</div>
+
 
 :::tip
 如果你不想要采用持久连接，可以在 HTTP 请求头中加上<code>Connection: close</code>。

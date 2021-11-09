@@ -16,10 +16,13 @@
   "author": "zhangchengliang",
   "license": "MIT",
   "devDependencies": {
+    "@mr-hope/vuepress-shared": "^1.20.1",
     "@vuepress/plugin-active-header-links": "^1.8.0",
     "@vuepress/plugin-back-to-top": "^1.8.0",
     "@vuepress/plugin-search": "^1.8.0",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^12.3.0",
     "vuepress": "^1.8.0",
-    "vuepress-plugin-md-enhance": "^1.14.4"
+    "vuepress-plugin-md-enhance": "1.14.4"
   }
 }

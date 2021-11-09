@@ -69,6 +69,8 @@ This is called implicit compositing: One or more non-composited elements that sh
 
 ![demo](@assets/browser/browser/20.gif)
 
+多个z-index: auto的div放置，虽然z-index都是auto，但实际上后放置的div，比前面的div层级高[z-index](https://developer.mozilla.org/zh-CN/docs/Web/CSS/z-index)
+
 ## 层压缩
 浏览器应对层爆炸策略: 如果多个渲染层同一个合成层重叠时，这些渲染层会被压缩到一个 GraphicsLayer 中，以防止由于重叠原因导致可能出现的“层爆炸
 * 有四个 absolute 定位的 div 在屏幕内发生了交叠。此时处于最下方的 div(z-index: 3) 在加上了 CSS 属性 transform: translateZ(0) 后被浏览器提升为合成层. 按照隐式合成原理，岂不是就会产生四个合成层了？

@@ -115,7 +115,9 @@ const setMPA = () => {
 * inline: 将 .map 作为 DataURI 嵌⼊，不单独⽣成 .map ⽂件
 * module: 包含 loader 的 sourcemap
 
-参考：https://blog.csdn.net/kaimo313/article/details/107007572
+参考：[使⽤ source map](https://blog.csdn.net/kaimo313/article/details/107007572)
+
+[source map深入](./error.md)
 
 ## 提取页面公共资源
 方法一：利用external + cdn，可参考[webpack系列-externals配置使用（CDN方式引入JS）](https://www.cnblogs.com/moqiutao/p/13744854.html)

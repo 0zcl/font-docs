@@ -27,6 +27,7 @@ showName()
 var showName = function() {
     console.log(2)
 }
+showName()
 function showName() {
     console.log(1)
 }
@@ -44,8 +45,10 @@ showName() // 输出1
 showName = function() {
   console.log(2)
 }
+showName() // 输出2
 // 如果后面再有showName执行的话，就输出2因为这时候函数引用已经变了
 ```
+变量提升和函数提升的优先级，函数提升高于变量提升，<strong>当存在同名时，在变量赋值之前函数声明还是函数声明，不会被覆盖</strong>，当变量赋值之后，函数声明将被变量覆盖。[JavaScript变量提升和函数提升](https://zhuanlan.zhihu.com/p/364416036)
 ## 为什么 JS 代码会出现栈溢出？
 每调用一个函数，JS引擎为其创建<code>执行上下文</code>，并压入栈中，而调用栈是有大小的，当栈的执行上下文超过一定数量时，就会出现<code>栈溢出</code>。
 
@@ -53,8 +56,8 @@ showName = function() {
 
 ## var缺陷以及如何解决？
 var缺陷：
-1. 变量容易在不被察觉的情况下被覆盖掉
-2. 本应销毁的变量没有被销毁
+1. 变量提升
+2. 污染全局变量
 ```js
 function foo(){
   for (var i = 0; i < 7; i++) {
@@ -168,7 +171,6 @@ let userInfo = {
   age:13,
   sex:male,
   updateInfo:function(){
-    //模拟xmlhttprequest请求延时
     setTimeout(function(){
       this.name = "pony.ma"
       this.age = 39
@@ -187,7 +189,6 @@ let userInfo = {
   age:13,
   sex:'male',
   updateInfo:function(){
-    // 模拟 xmlhttprequest 请求延时
     setTimeout(() => {
       this.name = "pony.ma"
       this.age = 39
@@ -256,6 +257,7 @@ foo()
 ![code](@assets/basic/js/14.png)
 
 机器码所占用的空间远远超过了字节码，所以<code>使用字节码可以减少系统的内存使用</code>。
+
 3. 执行代码。在执行字节码的过程中，如果发现有热点代码（HotSpot），比如一段代码被重复执行多次，这种就称为<code>热点代码</code>。把热点的字节码转换为机器码，并把转换后的机器码保存起来，以备下次使用
 
 ![v8](@assets/basic/js/15.png)

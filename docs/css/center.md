@@ -158,6 +158,7 @@ margin: auto;
   width: 100px;
   height: 100px;
   border: 1px solid yellow;
+  margin: auto;
   top: 0;
   bottom: 0;
   left: 0;

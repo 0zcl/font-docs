@@ -195,9 +195,269 @@ myAsync().then(res => console.log('res', res))
 
 
 ## 手写Promise
+1. 实例化Promise会传一个excuteFunc回调，excuteFunc回调有两个参数，分别是resolve, reject函数。实例化promise会执行excuteFunc
+2. .then传入两个回调函数。执行.then时，如果promise对象状态是pending，把两个回调分别放入队列，等到resolve/reject之后再执行
+3. .then返回一个新的promise
+### 第一版
+```js
+class MyPromise {
+  static PENDING = 'pending'
+  static FULFILLED = 'fulfilled'
+  static REJECTED = 'rejected'
 
+  constructor(excuteFunc) {
+    this.value = undefined // 存放成功状态的值
+    this.reason = undefined // 存放失败状态的值
+    this.status = MyPromise.PENDING
+    const resolve = value => {
+      if (this.status === MyPromise.PENDING) {
+        this.value = value
+        this.status = MyPromise.FULFILLED
+      }
+    }
+    const reject = reason => {
+      if (this.status === MyPromise.PENDING) {
+        this.reason = reason
+        this.status = MyPromise.REJECTED
+      }
+    }
+    excuteFunc(resolve, reject)
+  }
+  // 参数为两个回调
+  then(onFulFilled, onRejected) {
+    if (this.status === MyPromise.FULFILLED) {
+      onFulFilled(this.value)
+    }
+    if (this.status === MyPromise.REJECTED) {
+      onRejected(this.value)
+    }
+  }
+}
+
+// 测试一
+new MyPromise((resolve, reject) => {
+  resolve('zcl')
+}).then(
+  res => console.log('res', res),
+  error => console.log('err', error)
+)
+```
+问题：new promise对象后直接调用then，当excuteFunc是一个异步，不应该直接调用then，而是等异步执行了resolve或reject，才执行then
+
+解决：调用then时，如果状态为pending，把onFulFilled放到队列暂存，onRejected也放到队列暂存，等到resolve或reject状态变化时，才执行队列中的回调方法
+
+### 第二版
+```js
+class MyPromise {
+  static PENDING = 'pending'
+  static FULFILLED = 'fulfilled'
+  static REJECTED = 'rejected'
+
+  constructor(excuteFunc) {
+    this.value = undefined // 存放成功状态的值
+    this.reason = undefined // 存放失败状态的值
+    this.onFulFilledCallback = []
+    this.onRejectedCallback = []
+    this.status = MyPromise.PENDING
+
+    const resolve = value => {
+      if (this.status === MyPromise.PENDING) {
+        this.value = value
+        this.status = MyPromise.FULFILLED
+        this.onFulFilledCallback.forEach(cb => cb(this.value))
+      }
+    }
+    const reject = reason => {
+      if (this.status === MyPromise.PENDING) {
+        this.reason = reason
+        this.status = MyPromise.REJECTED
+        this.onRejectedCallback.forEach(cb => cb(this.reason))
+      }
+    }
+    excuteFunc(resolve, reject)
+  }
+  // 参数为两个回调
+  then(onFulFilled, onRejected) {
+    if (this.status === MyPromise.FULFILLED) {
+      onFulFilled(this.value)
+    }
+    if (this.status === MyPromise.REJECTED) {
+      onRejected(this.reason)
+    }
+    if (this.status === MyPromise.PENDING) {
+      this.onFulFilledCallback.push(onFulFilled)
+      this.onRejectedCallback.push(onRejected)
+    }
+  }
+
+}
+
+// 测试二
+const promise = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('成功');
+  }, 1000);
+}).then(
+  res => {
+    console.log('success', res)
+  },
+  error => {
+    console.log('faild', error)
+  }
+)
+// success 成功. 只执行上面是可以的
+
+promise.then(  // 出错 promise is undefined
+  res => {
+    console.log('success2', res)
+  },
+  error => {
+    console.log('faild2', error)
+  }
+)
+```
+
+问题：未实现链式调用。.then返回的是一个新的promise对象
+### 第三版
+```js
+class MyPromise {
+    static PENDING = 'pending'
+    static FULFILLED = 'fulfilled'
+    static REJECTED = 'rejected'
+
+    constructor(excuteFunc) {
+        this.value = undefined
+        this.reason = undefined
+        this.status = MyPromise.PENDING
+        this.onFulfilledCallback = []
+        this.onRejectedCallback = []
+
+        const resolve = value => {
+            if (this.status === MyPromise.PENDING) {
+                this.value = value
+                this.status = MyPromise.FULFILLED
+                this.onFulfilledCallback.forEach(cb => cb())
+            }
+        }
+        const reject = reason => {
+            if (this.status === MyPromise.PENDING) {
+                this.reason = reason
+                this.status = MyPromise.REJECTED
+                this.onRejectedCallback.forEach(cb => cb())
+            }
+        }
+
+        excuteFunc(resolve, reject)
+    }
+    
+    then(onFulFilled, onRejected) {
+        let result = undefined
+        return new MyPromise((resolve, reject) => {
+            if (this.status === MyPromise.FULFILLED) {
+                result = onFulFilled(this.value)
+                resolve(result)
+            }
+            if (this.status === MyPromise.REJECTED) {
+                result = onRejected(this.reason)
+                reject(result)
+            }
+            if (this.status === MyPromise.PENDING) {
+                this.onFulfilledCallback.push(() => {
+                    result = onFulFilled(this.value)
+                    resolve(result)
+                })
+                this.onRejectedCallback.push(() => {
+                    result = onRejected(this.reason)
+                    reject(result)
+                })
+            }
+        })
+    }  
+}
+
+
+new MyPromise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('zcl')
+    }, 1000)
+}).then(
+    res => {console.log('res', res);return 'hello'},
+    err => {console.log('err', err)}
+)
+```
+思路：then返回新的promise对象；如果第一个promise状态为fulfilled，则直接执行then的第一个参数方法，再执行then中新promise对象的resolve；如果第一个promise状态的pending，由于第一个promise执行resolve时，会调用队列的回调，因此，在回调中，不仅要执行then的第一/二个参数方法，执行完参数方法后，还要执行then中新promise对象的resolve
 
 ## 手写promise.all
+<code>const p = Promise.all([p1, p2, p3])</code>
+
+1. 返回一个promise对象p；
+2. 当p1, p2, p3状态都为fulfilled时，p状态才为fulfilled；当p1, p2, p3有一个状态为rejected时，p状态为rejected
+
+```js
+Promise.all = function(promiseList) {
+  return new Promise((resolve, reject) => {
+    let count = 0
+    const result = []
+    promiseList.forEach((p, index) => {
+      Promise.resolve(p).then(
+        res => {
+          count++
+          result[index] = res
+          if (count === promiseList.length) {
+            resolve(result)
+          }
+        },
+        err => {
+          reject(err)
+        }
+      )
+    })
+  })
+}
+
+// 测试一
+p1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('p1')
+        resolve('p1')
+    }, 1000)
+})
+p2 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('p2')
+        resolve('p2')
+    }, 3000)
+})
+// 3秒后打印：res (2) ['p1', 'p2']
+Promise.all([p1, p2]).then(res => {
+    console.log('res', res)
+})
+
+// 测试二
+p1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('p1')
+        reject('p1')
+    }, 1000)
+})
+p2 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('p2')
+        resolve('p2')
+    }, 3000)
+})
+// 1秒后打印：Uncaught (in promise) p1
+Promise.all([p1, p2]).then(res => {
+    console.log('res', res)
+})
+
+// 测试三
+// 3秒后打印：res (3) ['p1', 'p2', 'zcl']
+Promise.all([p1, p2, 'zcl']).then(res => {
+    console.log('res', res)
+})
+```
+
 
 ## 题一
 ```js
@@ -212,8 +472,6 @@ new Promise(resolve=>resolve())
   .then(() => console.log(6))
 ```
 答案：1 4 2 5 3 6
-
-* Promise.prototype.then() 会隐式返回一个新 Promise
 
 ## 题二
 ```js
@@ -245,64 +503,124 @@ new Promise((resolve, reject) => {
   console.log('8');
 })
 ```
-代码分析：
-```js
-1. 先执行同步代码
-2. setTimeout 为宏任务，先不执行
-3. new Promise里的代码作为同步代码，要执行 console.log('1'); 而then作为微任务，先不执行
-4. 又是一个new Promise,所以和第三步同理。只执行 console.log('7');
-5. 开始执行异步代码
-6. 执行第一个new Promise里的then 即console.log('2');以及new Promise的同步代码 console.log('3');
-7. 这步有点意思，这里不是执行console.log('4'); 而是执行console.log('8'); 
-8. 注释为📌的两个then是同层级的，所以按照执行顺序来打印
-9. 执行第三个层级的then，所有微任务代码完成
-10. 执行宏任务代码，即console.log('0');
-
 代码结果：1 7 2 3 8 4 6 5 0
-```
+:::tip
+注意了，执行到console.log('3')，此时微任务队列[8]; 打印3后执行resolve后，此时微任务队列[8, 4, 6]，为什么要加6，是因为6的上一个promise对象状态为undefined。嗯，比较难以表达出我的意思~~，看下一道题
+:::
 ## 题三
 ```js
+setTimeout(() => {
+  console.log('0');
+}, 0)
+new Promise((resolve, reject) => {
+  console.log('1');
+  resolve();
+}).then(() => {
+  console.log('2');
+  // 加了return
+  return new Promise((resolve, reject) => {
+    console.log('3');
+    resolve();
+  }).then(() => {     // 📌
+    console.log('4');
+  }).then(() => {
+    console.log('5');
+  })
+}).then(() => {
+  console.log('6');   // 📌
+})
+
+new Promise((resolve, reject) => {
+  console.log('7');
+  resolve()
+}).then(() => {        
+  console.log('8');
+})
+```
+代码结果：1 7 2 3 8 4 5 6 0。 因为加了return, 要等打印5后，返回一个promise对象状态，才会执行6
+## 题四
+```js
 let v = new Promise(resolve => {
-    console.log("v-begin"); // 1
+    console.log("v-begin"); 
     resolve("v-then");
 });
-// 1、new Promise(resolve => resolve(v))
-new Promise(resolve => resolve(v))
-// 2、Promise.resolve(v)
-// Promise.resolve(v)
+
+Promise.resolve(v)
 .then((v) => {
-    console.log(v) // 5
+    console.log(v) 
 });
 
 new Promise(resolve => {
-    console.log(1); // 2
+    console.log(1);
     resolve();
 })
 .then(() => {
-    console.log(2); // 3
+    console.log(2);
 })
 .then(() => {
-    console.log(3); // 4
+    console.log(3);
 })
 .then(() => {
-    console.log(4); // 6
+    console.log(4);
 });
 ```
-1. 使用new Promise(resolve => resolve(v))，输出: v-begin 1 2 3 v-then 4
-* 按照输出可以看出微任务队列如下：[ console.log(2) -> console.log(3) -> console.log(v) -> console.log(4) ]
-2. 使用Promise.resolve(v)，输出：v-begin 1 v-then 2 3 4
-* 按照输出可以看出微任务队列如下：[ console.log(v) -> console.log(2) -> console.log(3) -> console.log(4) ]
+结果：v-begin 1 v-begin 2 3 4
 
-Promise.resolve(v)，参数v是一个 Promise 实例，那么Promise.resolve将不做任何修改、原封不动地返回这个实例。
-* 按照输出可以看出微任务队列如下：[ console.log(v) -> console.log(2) -> console.log(3) -> console.log(4) ]
-
-new Promise(resolve => resolve(v)) v为promise对象时，then会推迟两个时序
+Promise.resolve() 参数是原始数据(String, Number, Array..)，返回一个fulfilled状态的promise对象；
+参数是一个promise对象，那么Promise.resolve将不做任何修改、原封不动地返回这个promise实例
+## 题五
 ```js
-// Promise里的resolve() 
-// 1 2 3 v-then 4 可以发现then推迟了两个时序
-// 推迟原因：浏览器会创建一个 PromiseResolveThenableJob 去处理这个 Promise 实例，这是一个微任务。
-// 等到下次循环到来这个微任务会执行，也就是PromiseResolveThenableJob 执行中的时候，因为这个Promise 实例是fulfilled状态，所以又会注册一个它的.then()回调
-// 又等一次循环到这个Promise 实例它的.then()回调执行后，才会注册下面的这个.then(),于是就被推迟了两个时序
+let v = new Promise(resolve => {
+    console.log("v-begin"); 
+    resolve("v-then");
+});
+
+new Promise(resolve => resolve(v))
+.then((v) => {
+    console.log(v) 
+});
+
+new Promise(resolve => {
+    console.log(1);
+    resolve();
+})
+.then(() => {
+    console.log(2);
+})
+.then(() => {
+    console.log(3);
+})
+.then(() => {
+    console.log(4); 
+});
+```
+结果：v-begin 1 2 3 v-then 4
+
+<code>new Promise(resolve => resolve(v)) v为promise对象时，then会推迟两个时序。</code>
+
+推迟原因：浏览器会创建一个 PromiseResolveThenableJob 去处理这个 Promise 实例，这是一个微任务。研究了下，还是没懂，暂时记得有这个东西吧~~
+
+## 题六
+* async修饰的函数必定返回一个 Promise 对象；
+* async修饰的函数若没有返回值时，Promise的resolve方法会传递一个undefined值；
+* async修饰的函数若有返回值时，Promise的resolve方法会传递这个值；
+* async修饰的函数若抛出异常，Promise的reject方法会传递这个异常值；
+```js
+async function add(){}
+add().then(res=>console.log(res))
+// 等价于
+// Promise.resolve().then(res=>console.log(res))
+// undefined
+
+async function add(){
+	return 1 
+}
+add().then(res=>console.log(res))
+// 等价于
+// Promise.resolve(1).then(res=>console.log(res))
+// 1
+
+// 如果async2有异步操作
 async function async1() {
     console.log('async1 start')
     await async2()
@@ -329,28 +647,6 @@ function async1() {
     console.log('async1 end') // 推迟了两个时序
   });
 }
-```
-
-## 题四
-* async修饰的函数必定返回一个 Promise 对象；
-* async修饰的函数若没有返回值时，Promise的resolve方法会传递一个undefined值；
-* async修饰的函数若有返回值时，Promise的resolve方法会传递这个值；
-* async修饰的函数若抛出异常，Promise的reject方法会传递这个异常值；
-```js
-async function add(){}
-add().then(res=>console.log(res))
-// 等价于
-// Promise.resolve().then(res=>console.log(res))
-// undefined
-
-async function add(){
-	return 1 
-}
-add().then(res=>console.log(res))
-// 等价于
-// Promise.resolve(1).then(res=>console.log(res))
-// 1
-
 ```
 ```js
 console.log('script start')
@@ -393,9 +689,7 @@ console.log('script end')
 ```
 答案： script start -> async2 end -> Promise -> script end -> async2 end1 -> promise1 -> promise4 -> promise2 -> async1 end -> promise3 -> setTimeout
 
-## 题五
-Await 规范的更新: await v 在语义上将等价于 Promise.resolve(v)，而不再是现在的 new Promise(resolve => resolve(v))
-
+## 题七
 ```js
 console.log('script start') // 1
 
@@ -446,12 +740,7 @@ console.log('script end')
 
 参考：
 [async函数的实现原理](https://es6.ruanyifeng.com/#docs/async#async-%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
-<!-- [BAT前端经典面试问题：史上最最最详细的手写Promise教程](https://juejin.cn/post/6844903625769091079)
-[面试官：“你能手写一个 Promise 吗”](https://zhuanlan.zhihu.com/p/183801144)
-[关于async/await、promise和setTimeout的执行顺序](https://juejin.cn/post/6968815596393725983)
 
-[令人费解的 async/await 执行顺序](https://juejin.cn/post/6973817105728667678#heading-2)
+[new Promise((resolve)=>{resolve()}) 与 Promise.resolve() 等价吗](https://segmentfault.com/q/1010000021636481/a-1020000021638234)
 
-[从一道面试题解读Promise/async/await执行顺序](https://juejin.cn/post/6941023062833758222#heading-0)
-[async await 和 promise微任务执行顺序问题](https://segmentfault.com/q/1010000016147496)
 [面试题：说说事件循环机制(满分答案来了)](https://mp.weixin.qq.com/s?__biz=MzI0MzIyMDM5Ng==&mid=2649826653&idx=1&sn=9e5e2de78a8ef4de3820769ff3ab7c02&chksm=f175ef9ec60266880a86f33085ff43f95e3180846c5f139cb9b1b33c3245201157f39d949e9a&scene=21#wechat_redirect) -->

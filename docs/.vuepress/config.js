@@ -230,7 +230,6 @@ module.exports = {
             ['', 'glob'],
             ['module', '模块化机制'],
             ['eventLoop', '事件循环'],
-            ['micro-font', '微前端'],
             ['koa', 'KOA2框架原理'],
             ['child_process', 'Node子进程'],
             ['cluster', 'cluster原理']
@@ -252,22 +251,35 @@ module.exports = {
       ],
       '/buildTools/': [
         {
-          title: 'webpack',
+          title: 'webpack基础',
           collapsable: true,
           children: [
             ['webpack/', '基础'],
             ['webpack/module_chunk_bundle', 'module_chunk_bundle'],
             ['webpack/hash', '文件指纹'],
-            ['webpack/postcss', 'postcss'],
+            ['webpack/postcss', 'postcss']
+          ]
+        },
+        {
+          title: 'webpack深入',
+          collapsable: true,
+          children: [
             ['webpack/source', '源码深入'],
             ['webpack/zcl-pack', '手写简易webpack'],
             ['webpack/loader', 'webpack-loader机制'],
             ['webpack/plugin', 'webpack-插件机制'],
             ['webpack/__webpack_require__', 'webpack 模块加载原理'],
-            ['webpack/lazy-load', '懒加载'],
+            ['webpack/lazy-load', '懒加载(未完全理解)'],
             ['webpack/HMR', '热更新原理'],
             ['webpack/proxy', 'webpack proxy原理'],
             ['webpack/performance', 'webpack性能优化']
+          ]
+        },
+        {
+          title: '杂',
+          collapsable: true,
+          children: [
+            ['webpack/error', 'source map深入']
           ]
         }
       ],

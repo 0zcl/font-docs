@@ -46,6 +46,9 @@ console.log(url) // "https://github.com?param=https%3A%2F%2Fgithub.com%2FJacky-S
 * org 就是顶级域名
 * geekbang 是二级域名
 * time 则是主机名
+
+[域名、顶级域名、一级域名、二级域名、子域名](https://www.cnblogs.com/guanghe/p/11975387.html)
+
 ### dns解析过程
 以访问百度为例：
 1. 在浏览器中输入www.baidu.com之后，系统会检查本地hosts文件是否存在域名映射。
@@ -55,6 +58,8 @@ console.log(url) // "https://github.com?param=https%3A%2F%2Fgithub.com%2FJacky-S
 ![dns](@assets/browser/browser/2.png)
 
 dns查询有两种模式，一种是<code>转发模式</code>，一种是<code>非转发模式</code>，我上面说的4是非转发模式
+
+![dns](@assets/browser/browser/29.png)
 
 chrome://net-internals/ 的一些功能已经在Chrome 71之后被移除了。
 

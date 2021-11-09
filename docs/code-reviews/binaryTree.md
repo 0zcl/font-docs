@@ -7,9 +7,9 @@
 
 ## 遍历方法图解与编码实现
 以先序遍历为例，举一反三。先序遍历的“旅行路线”如下图红色数字 所示：
-![blockchain](~@assets/code-reviews/6.png)
+![blockchain](@assets/code-reviews/6.png)
 如果说有 N 多个子树，那么我们<font color=red>**在每一棵子树内部，都要重复这个“旅行路线”**</font>，动画演示如下：
-![blockchain](~@assets/code-reviews/7.gif)
+![blockchain](@assets/code-reviews/7.gif)
 
 ### 递归函数的编写要点
 * 递归式：遍历根结点 -> 左结点 -> 右结点。对每个子树，重复这个旅行路线。
@@ -57,21 +57,21 @@ $ node binaryTree-1.js
 
 ## 图解先序遍历的完整过程
 各位现在完全可以再回过头来看一下我们前面示例的这棵二叉树：
-![blockchain](~@assets/code-reviews/8.png)
+![blockchain](@assets/code-reviews/8.png)
 我们直接把它套进 preorder 函数里，一步一步来认清楚先序遍历的每一步做了什么：
 1. 调用 preorder(root)，这里 root 就是 A，它非空，所以进入递归式，输出 A 值。接着优先遍历左子树，preorder(root.left) 此时为 preorder(B) ：
-![blockchain](~@assets/code-reviews/9.png)
+![blockchain](@assets/code-reviews/9.png)
 2. 进入 preorder(B) 的逻辑： 入参为结点 B，非空，进入递归式，输出 B 值。接着优先遍历 B 的左子树，preorder(root.left) 此时为 preorder(D) ：
-![blockchain](~@assets/code-reviews/10.png)
+![blockchain](@assets/code-reviews/10.png)
 3. 进入 preorder(D) 的逻辑： 入参为结点 D，非空，进入递归式，输出 D 值。接着优先遍历 D 的左子树，preorder(root.left) 此时为 preorder(null)：
-![blockchain](~@assets/code-reviews/11.png)
+![blockchain](@assets/code-reviews/11.png)
 4. 进入preorder(null) ，发现抵达了递归边界，直接 return 掉。紧接着是 preorder(D) 的逻辑往下走，走到了 preorder(root.right) ：
-![blockchain](~@assets/code-reviews/12.png)
+![blockchain](@assets/code-reviews/12.png)
 5. 再次进入preorder(null) ，发现抵达了递归边界，直接 return 掉，回到preorder(D) 里。接着 preorder(D) 的逻辑往下走，发现 preorder(D) 已经执行完了。于是返回，回到preorder(B) 里，接着preorder(B) 往下走，进入 preorder(root.right) ，也就是 preorder(E) 
 6. E不为空，进入递归式，输出 E 值。接着优先遍历 E 的左子树，preorder(root.left) 此时为 preorder(null)，触碰递归边界，直接返回 preorder(E)；继续preorder(E)执行下去，是preorder(root.right) ，这里 E 的 right 同样是 null，故直接返回。如此一来，preorder(E)就执行完了，回到preorder(B)里去；发现preorder(B)也执行完了，于是回到preorder(A)里去，执行preorder(A)中的 preorder(root.right)。root 是A，root.right 就是 C 了，进入preorder(C)的逻辑
-![blockchain](~@assets/code-reviews/13.png)
+![blockchain](@assets/code-reviews/13.png)
 C 不为空，进入递归式，输出 C 值。接着优先遍历 C 的左子树，preorder(root.left) 此时为 preorder(null)，触碰递归边界，直接返回。继续preorder(C)执行下去，是preorder(root.right) ，这里 C 的 right 是 F：
-![blockchain](~@assets/code-reviews/14.png)
+![blockchain](@assets/code-reviews/14.png)
 7. 进入preorder(F)的逻辑，F 不为空，进入递归式，输出 F 值。接着优先遍历 F 的左子树，preorder(root.left) 此时为 preorder(null)，触碰递归边界，直接返回 preorder(F)；继续preorder(F)执行下去，是preorder(root.right) ，这里 F 的 right 同样是 null，故直接返回preorder(F)。此时preorder(F)已经执行完了，返回preorder(C)；发现preorder(C)也执行完了，就回到 preorder(A)；发现preorder(A)作为递归入口，它的逻辑也已经执行完了，于是我们的递归活动就正式画上了句号。
 
 ## 中序遍历与后序遍历

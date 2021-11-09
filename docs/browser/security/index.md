@@ -1,7 +1,7 @@
 同源策略会隔离不同源的 DOM、页面数据和网络通信. 
 
 同源策略出于便利性的让步：页面中可以嵌入第三方资源
-
+## CSP
 CSP[内容安全策略](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP), 核心思想：让服务器决定浏览器能够加载哪些资源，让服务器决定浏览器是否能够执行内联 JavaScript 代码
 ```js
 Content-Security-Policy: default-src ‘self’ // 只允许加载本站资源

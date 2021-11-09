@@ -19,6 +19,8 @@ If-Modified-Since
 
 ![If-Modified-Since](@assets/browser/browser/13.png)
 
+当ETag和Last-Modified同时存在时，服务器先会检查ETag，然后再检查Last-Modified
+
 ## 什么是from disk cache和from memory cache ？什么时候会触发？
 强缓存时会触发。
 * memory cache: 资源缓存在内存中，读取速度更快。关闭tab页面，内存缓存会被释放。
