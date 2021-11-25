@@ -1,7 +1,7 @@
 ## 组件里的 data 必须是一个函数返回的对象，而不能就只是一个对象?
-由于组件可以多次复用，因此需要通过工厂函数模式返回一个对象，组件每次实例化时(复用组件)调用data()函数返回新的数据对象.
+由于组件可以多次复用，因此需要通过工厂函数模式返回一个对象，组件每次实例化时(复用组件)调用data()函数返回独立的数据对象. 
 
-如果data 仍然是一个纯粹的对象，则组件每次实例时将引用同一个数据对象
+如果data 仍然是一个纯粹的对象，则组件每次实例时将引用同一个数据对象。因数esmodule抛出的实际上是一个引用！
 
 源码简析
 ```js
@@ -108,3 +108,22 @@ C更新成F，D更新成C，E更新成D，最后再插入E，发生了 4 次 vno
 只需 发生 1次 vnode 结构变化 
 
 [v-for为什么要加key，能用index作为key么](https://www.cnblogs.com/youhong/p/11327062.html)
+
+## v-model原理
+v-model是个语法糖: 原理是监听input事件，把当前更新的值赋给响应式数据
+```js
+// 相当于
+v-bind:value="value"
+v-on:input="e => value = e.target.value"
+```
+
+## .sync修饰符原理
+Vue父子组件的<code>Prop</code>是<code>单向数据流</code>, 父级 prop 的更新会向下流动到子组件中，反之不行。因此，不能在子组件直接修改prop数据，否则会爆错。
+
+.sync实现了prop数据双向流动。通过父组件监听@update:xxx, 子组件$emit('update:xxx', 更新的值)触发父组件事件。
+```js
+:xxx.sync="xxx"
+// 相当于
+:xxx="xxx" @update:xxx="xxx=更新的值"
+```
+![sync](@assets/vue/reactive/7.png)

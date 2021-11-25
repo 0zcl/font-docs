@@ -1,4 +1,4 @@
-## Node.js和和JavaScript的区别？
+## Node.js和JavaScript的区别？
 Node.js 是一个<code>非阻塞式I/O</code>的、<code>事件驱动</code>的JavaScript运行环境
 
 ## Node.js 是单线程的还是多线程的？
@@ -83,7 +83,7 @@ child_fork.send({ key: 'parent value' })
 
 参考：[spawn vs child_process](https://gist.github.com/devarajchidambaram/8b3ffe8337a310ee367390cc49419f26)
 
-对child_process.exec默认情况下，缓冲区大小设置为 200k。产生怀疑。于是查看官方文档
+对child_process.exec默认情况下，缓冲区大小设置为 200k。产生怀疑。看了源码是1M, 于是查看官方文档
 :::tip
 maxBuffer 标准输出或标准错误上允许的最大数据量（以字节为单位）。 如果超过，则子进程将终止并截断任何输出。 请参阅 maxBuffer 和 Unicode 的注意事项。 默认值: 1024 * 1024
 :::
@@ -197,7 +197,7 @@ execFile中，这里创建的2个数组<code>_stdout, _stderr</code>，<code>exe
 
 问：3. child_process.exec的缓冲区大小设置得不够大，则会失败并显示“maxBuffer exceeded”错误。如何实现？
 
-答：<code>MAX_BUFFER = 1024 * 1024;</code>默认设置max_fuffer为1M，child_process.exec在监听子进程输出流并收集输出流时，如果收集到的数据大于1M，则抛错
+答：<code>MAX_BUFFER = 1024 * 1024;</code>默认设置max_fuffer为1M，child_process.exec在监听子进程输出流并收集输出流时，如果收集到的数据大于1M，则抛错。新的Node版本，缓存大小为1M。
 
 问：child.stdout.on是如何接收到data的呢？
 ```js

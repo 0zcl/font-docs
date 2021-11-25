@@ -125,7 +125,7 @@ fn() // 1 3 5 6 4 2
 ```
 [Promise.resolve()](https://es6.ruanyifeng.com/#docs/promise#Promise-resolve) 参数如果是一个Promise实例，那么Promise.resolve将不做任何修改、原封不动地返回这个实例
 
-源码为啥要用Promise.resolve呢？
+源码为啥要用Promise.resolve呢？ 个人理解是为了保证compose函数返回一个promise
 
 
 ## 面试

@@ -227,3 +227,12 @@ teardown () {
   }
 }
 ```
+
+## 父组件和子组件的执行顺序？
+父beforeCreate-> 父created -> 父beforeMounte -> 子beforeCreate ->子create ->子beforeMount ->子 mounted -> 父mounted
+
+子组件更新：父beforeUpdate->子beforeUpdate->子updated->父updated
+
+父组件更新过程：父beforeUpdate->父updated
+
+销毁：父beforeDestroy->子beforeDestroy->子destroyed->父destroyed

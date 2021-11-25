@@ -15,6 +15,7 @@ observe数据劫持在beforeCreate之后，created之前
 
 ## 核心代码
 <code>observer</code>
+
 ::: details
 ```js
 // 遍历对象
@@ -109,6 +110,7 @@ function defineReactive(obj: Object, key: string, val: any) {
 :::
 
 <code>Dep</code>
+
 ::: details
 ```js
 class Dep {
@@ -143,6 +145,7 @@ class Dep {
 
 
 <code>Watcher</code>
+
 ::: details
 ```js
 class Watcher {
@@ -196,6 +199,89 @@ class Watcher {
 ```
 :::
 
+## 响应式对数组是如何处理
+<code>Object.defineProperty</code>无法检测数组变化吗？ 实际上，是可以的！
+
+```js
+function defineReactive(obj, key, val) {
+  Object.defineProperty(obj, key, {
+    configurable: true,
+    get: () => {
+        console.log('get')
+        return val
+    },
+    set: (newVal) => {
+        val = newVal
+        console.log('set')
+    }
+  })
+}
+
+// 测试
+arr = [1,2]
+defineReactive(arr, 0, 1)
+arr[0] // get 1
+arr[0] = 'zcl' // set 'zcl'
+arr // ['zcl', 1]
+```
+不用<code>Object.defineProperty</code>来处理数组的响应式，个人理解是：监听数组所有索引性能有影响。
+
+源码的处理是使用代理的方式，重写了Array.prototype的数组操作API。当数组使用api时，实际上是执行代理重写的数组api，在重写的api中会调用<code>dep.notify()</code>, 通知watcher, 执行 update
+```js
+if (Array.isArray(value)) {
+  if (hasProto) {
+    debugger
+    protoAugment(value, arrayMethods) // value.__proto__ = arrayMethods 指向代理对象
+  } else {
+    copyAugment(value, arrayMethods, arrayKeys)
+  }
+  this.observeArray(value)
+}
+
+// src/core/observer/array.js
+const arrayProto = Array.prototype
+export const arrayMethods = Object.create(arrayProto)
+
+const methodsToPatch = [
+  'push',
+  'pop',
+  'shift',
+  'unshift',
+  'splice',
+  'sort',
+  'reverse'
+]
+
+/**
+ * Intercept mutating methods and emit events
+ */
+methodsToPatch.forEach(function (method) {
+  // cache original method
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator (...args) {
+    debugger
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    if (inserted) ob.observeArray(inserted)
+    // notify change
+    ob.dep.notify() // 通知更新
+    return result
+  })
+})
+
+```
+
+
 ## 面试
 问：说说Vue响应式原理
 
@@ -209,7 +295,7 @@ class Watcher {
 问：Vue的响应式对数组是如何处理？
 
 答：
-
+使用代理拦截数组的api操作，当调用数组的api时，实际上会执行代理重写的数组api，在重写的api中会执行dep.notify()，执行watcher的update
 
 参考：
 [剖析Vue原理&实现双向绑定MVVM](https://segmentfault.com/a/1190000006599500)

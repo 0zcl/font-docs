@@ -68,6 +68,10 @@ module.exports = {
           {
             text: '整体流程',
             link: '/vue/whole-process/'
+          },
+          {
+            text: 'Vuex&Vue-router',
+            link: '/vue/vuex/'
           }
         ]
       },
@@ -76,7 +80,7 @@ module.exports = {
         link: '/mobile/'
       },
       {
-        text: '算法与数据结构',
+        text: 'LC',
         link: '/code-reviews/'
       },
       {
@@ -232,7 +236,7 @@ module.exports = {
             ['eventLoop', '事件循环'],
             ['koa', 'KOA2框架原理'],
             ['child_process', 'Node子进程'],
-            ['cluster', 'cluster原理']
+            ['cluster', 'cluster原理(了解)']
           ]
         }
       ],
@@ -279,7 +283,9 @@ module.exports = {
           title: '杂',
           collapsable: true,
           children: [
-            ['webpack/error', 'source map深入']
+            ['other/error', 'source map深入'],
+            ['other/ci&cd', 'CI/CD'],
+            ['other/design', '设计模式']
           ]
         }
       ],
@@ -356,6 +362,23 @@ module.exports = {
           ]
         }
       ],
+      '/vue/vuex/': [
+        {
+          title: 'vuex&vue-router',
+          path: '/vue/vuex/',
+          children: [
+            ['', 'Vuex'],
+            ['vue-router', 'vue-router']
+            // {
+            //   path: '/vue/vuex/',
+            //   children: [
+            //     ['', 'Vuex'],
+            //     ['vue-router', 'vue-router']
+            //   ]
+            // }
+          ]
+        }
+      ],
       '/mobile/': [
         {
           title: '移动端',
@@ -373,9 +396,9 @@ module.exports = {
           collapsable: false,
           sidebarDepth: 3,
           children: [
-            ['leetcode', 'leetcode']
-            // ['', 'Introduction'],
-            // 'binaryTree'
+            ['', 'leetcode'],
+            ['sort', '排序'],
+            ['lc', 'LC'],
           ]
         }
       ],
@@ -418,7 +441,8 @@ module.exports = {
           sidebarDepth: 3,
           children: [
             ['vue3', 'vue3'],
-            ['vite', 'vite']
+            ['vite', 'vite'],
+            ['ts', 'typescript']
             // ['', 'Introduction'],
             // 'binaryTree'
           ]
