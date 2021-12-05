@@ -275,8 +275,7 @@ module.exports = {
             ['webpack/__webpack_require__', 'webpack 模块加载原理'],
             ['webpack/lazy-load', '懒加载(未完全理解)'],
             ['webpack/HMR', '热更新原理'],
-            ['webpack/proxy', 'webpack proxy原理'],
-            ['webpack/performance', 'webpack性能优化']
+            ['webpack/proxy', 'webpack proxy原理']
           ]
         },
         {
@@ -285,7 +284,8 @@ module.exports = {
           children: [
             ['other/error', 'source map深入'],
             ['other/ci&cd', 'CI/CD'],
-            ['other/design', '设计模式']
+            ['other/design', '设计模式'],
+            ['other/performance', '性能优化(整理中)']
           ]
         }
       ],
@@ -398,7 +398,7 @@ module.exports = {
           children: [
             ['', 'leetcode'],
             ['sort', '排序'],
-            ['lc', 'LC'],
+            ['lc', 'LC(整理中)'],
           ]
         }
       ],

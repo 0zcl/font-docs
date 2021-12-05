@@ -117,7 +117,7 @@ const setMPA = () => {
 
 参考：[使⽤ source map](https://blog.csdn.net/kaimo313/article/details/107007572)
 
-[source map深入](./error.md)
+[source map深入](../other/error.md)
 
 ## 提取页面公共资源
 方法一：利用external + cdn，可参考[webpack系列-externals配置使用（CDN方式引入JS）](https://www.cnblogs.com/moqiutao/p/13744854.html)
@@ -154,9 +154,41 @@ Tree shaking 是一种通过清除多余代码方式来优化项目打包体积�
 
 CommonJS规范得在实际运行时才能确定需要或者不需要某些模块
 ### tree shaking原理
-依赖于ES6 moudel特性
-* ES6 module 在[静态编译](https://exploringjs.com/es6/ch_modules.html#static-module-structure)时，就能确定模块的依赖关系，从而知道加载了那些模块
+生产环境默认开发tree sharking。依赖于ES6 moudel特性
+* 由于ES6 module <code>静态结构(static-module-structure)</code>的特点。在[静态编译](https://exploringjs.com/es6/ch_modules.html#static-module-structure)时，就能确定模块的依赖关系，从而知道加载了那些模块
 * 静态分析程序流，判断那些模块和变量未被使用或者引用，进而删除对应代码
+
+### 副作用
+副作用：执行一个函数会、可能会对函数外部变量（全局变量、函数外的变量等） 产生影响，就叫副作用
+1. webpack只会在压缩代码时才会起作用。eg: 生产环境或开发环境+terser
+```js
+const TerserPlugin = require("terser-webpack-plugin")
+mode: 'development',
+// 生产环境无需做如下配置，就能tree sharking
+optimization: {
+  usedExports: true,
+  minimize: true,
+  minimizer: [new TerserPlugin()],
+},
+```
+2. babel的modules：false 。Setting this to false will preserve ES module 设置为false，babel编译后保留esm
+```js
+["@babel/preset-env", {
+  "modules": false
+  // "modules": "commonjs" // 这种无法tree sharking
+}],
+```
+3. package.json中 "sideEffects": false。表示所有文件都没有副作用，全都可tree sharking
+4. 由于<code>import '...（路径）'</code>会被tree sharking，如果引入全局样式，样式代码被sharking了，显然错误。
+```js
+// 不对数组的文件做tree sharking
+"sideEffects": [
+  "*.css",
+  "*.less"
+]
+```
+
+[聊一聊面试中经常被问到的Tree Shaking](https://mp.weixin.qq.com/s/n3nwV-OtLKB-_SHl8Tc3Sg)
 
 ## [scope hoisting](https://webpack.docschina.org/configuration/optimization/#optimizationconcatenatemodules)原理
 原因：打包时webpack的权衡之一是将每个模块都将包裹在单独的函数闭包中。这些包装函数使您的JavaScript在浏览器中执行的速度变慢。

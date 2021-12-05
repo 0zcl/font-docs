@@ -121,7 +121,7 @@ run(gen)
 // y 444
 ```
 5. async/await：async函数是Generator的语法糖。相当于生成器的*号，换成async; yield换成await。async/await相比生成器，有以下三点改进：
-* async函数内置执行器。不用像Generator需要调next, 或者用co来执行
+* async函数内置自动执行器。不用像Generator需要每次手动调next
 * 适用性更好。<code>co</code>+<code>Generator</code>方案，yield后面只能是Thunk函数(暂不了解。。)或Promise对象; 而async函数的await后面，除了Promise对象还可以是原始数据类型的值(Number, String, Array..., 会自动转成立即 resolved 的 Promise 对象)
 * async函数返回值是Promise对象 
 
@@ -170,9 +170,9 @@ function generatorToAsync(genFunc) {
       const next = data => {
         const result = gen.next(data)
         if (result.done) return resolve(result.value)
-        Promise.resolve(result.value).then(  // 3. await后面是原始类型，会返回状态为resolve的Promise对象
+        Promise.resolve(result.value).then(  // 3. await 可以是原始类型
           res => next(res),
-          error => reject(error)
+          error => return reject(error) // 4. await后的异步，只要有一个出错，就不往下执行
         )
       }
       next()
@@ -191,8 +191,8 @@ myAsync().then(res => console.log('res', res))
 思路：
 1. async函数是 Generator + 自动执行器
 2. async函数返回Promise对象
-3. await后面是原始类型，会返回状态为resolve的Promise对象
-
+3. 代码注释第3点，result.value如果是promise，其实用result.value.then()就可以了。但个人理解，考虑到await后面可以是原始类型。所以用Promise.resolve(result.value)做兼容处理。
+4. resolve, reject时要return，是为了不再往下执行了
 
 ## 手写Promise
 1. 实例化Promise会传一个excuteFunc回调，excuteFunc回调有两个参数，分别是resolve, reject函数。实例化promise会执行excuteFunc

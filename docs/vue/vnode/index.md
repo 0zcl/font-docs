@@ -1,7 +1,7 @@
 ## 说一下什么是Virtual DOM
 Virtual DOM 是 DOM 节点在 JavaScript 中的一种抽象数据结构. 
 
-VNode有很多个属性，比较重要的属性有：tag、data、children和key
+VNode有很多个属性，比较重要的属性有：tag、data、children和context
 * tag表示为元素标签的类型，例如：p、div或者ul等。
 * data表示节点上的数据，包括atts、style和class等。
 * children表示子节点列表，它是一个VNode实例数组。

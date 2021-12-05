@@ -47,7 +47,7 @@ webpack编译过程的hook钩子。更多[Compiler Hooks](https://webpack.js.org
 * fail: 编译失败的时候
 
 
-插件[demo]()
+插件[demo](https://github.com/0zcl-free/webpack-loader-vs-plugin)
 ```js
 const JSZip = require('jszip')
 const path = require('path')

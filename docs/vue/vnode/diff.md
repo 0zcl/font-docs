@@ -1,7 +1,6 @@
 ## patch
 虚拟DOM 最核心部分是patch, 它可以将vnode渲染成真实的DOM. patch, 渲染真实DOM时, 并不是暴力覆盖原有DOM, 而是比对新旧两个vnode之间有哪些不同, 根据对比结果找出需要更新的节点进行更新. 故patch实际作用是在现有DOM上进行修改来实现更新视图
 
-## patch
 ```js
 return function patch(oldVnode, vnode, hydrating, removeOnly) {
   // 新的不存在，删除
@@ -58,7 +57,7 @@ return function patch(oldVnode, vnode, hydrating, removeOnly) {
 </script>
 ```
 :::
-第一次进入到 patch 这个函数的时候是根组件挂载时，此时因为 oldVnode 为 demo 这个<code>真实的DOM元素</code>, 我们会走到这里：
+第一次进入到 patch 这个函数的时候是根组件挂载时，此时因为 oldVnode 为 demo 这个<code>真实的DOM元素</code>, 执行emptyNodeAt会通过new Vnode返回一个生成的vnode实例，并vnode.elem = oldVnode， 即把最外层的Dom（#demo）赋给vnode.ele。而createEle中的vnode参数是<code>const vnode = vm._render()</code>模版编译生成的render函数，执行render返回的vnode。我们会走到这里：
 ```js
 if (isRealElement) {
   // either not server-rendered, or hydration failed.
@@ -80,7 +79,7 @@ createElm(
   // keep-alive + HOCs. (#4590)
   oldElm._leaveCb ? null : parentElm,
   // 新的 dom 会放到旧的 dom 的后面，所以有一瞬间两者都会存在
-  // 这样的好处是第一次渲染可以避免对 children 进行无谓的 diff，当然这种做法仅适用于 hydrating 为 false 的时候
+  // 这样的好处是第一次渲染可以避免对 children 进行无谓的 diff，当然这种做法仅适用于 hydrating 为 false 的时候. hydrating??
   nodeOps.nextSibling(oldElm)
 )
 ```
@@ -96,21 +95,28 @@ createElm(
 ### 接下来简要分析下createElm
 首先创建了一个 tag 类型的元素，并赋值给 vnode.elm。因为传进来的 vnode 是原生标签，所以最后会走到
 ```js
-const data = vnode.data
-const children = vnode.children
-const tag = vnode.tag
-// .....
-vnode.elm = vnode.ns
-      ? nodeOps.createElementNS(vnode.ns, tag)
-      : nodeOps.createElement(tag, vnode)
-// .....
-createChildren(vnode, children, insertedVnodeQueue)
-if (isDef(data)) {
-  // 事件、属性等等初始化
-  invokeCreateHooks(vnode, insertedVnodeQueue)
+function createElm (
+  vnode,
+  insertedVnodeQueue,
+  parentElm,
+  ...
+)
+  const data = vnode.data
+  const children = vnode.children
+  const tag = vnode.tag
+  // .....
+  vnode.elm = vnode.ns
+        ? nodeOps.createElementNS(vnode.ns, tag)
+        : nodeOps.createElement(tag, vnode)
+  // .....
+  createChildren(vnode, children, insertedVnodeQueue)
+  if (isDef(data)) {
+    // 事件、属性等等初始化
+    invokeCreateHooks(vnode, insertedVnodeQueue)
+  }
+  // 插入节点
+  insert(parentElm, vnode.elm, refElm)
 }
-// 插入节点
-insert(parentElm, vnode.elm, refElm)
 ```
 其中 createChildren 中又调用了 createElm：
 ```js
@@ -218,7 +224,7 @@ function patchVnode(
 }
 ```
 patchVnode做了两件事：
-1. 更新属性. 略
+1. 更新属性. 略？？
 2. 更新 children 或者更新文本<code>setTextContent</code>
 
 更新 <code>chidren</code> 有几种情况:
@@ -233,11 +239,11 @@ patchVnode做了两件事：
 
 在新⽼两组 vnode 节点的左右头尾两侧都有⼀个变量标记，在遍历过程中这⼏个变量都会向中间靠拢。当 oldStartIdx > oldEndIdx 或者 newStartIdx > newEndIdx 时结束循环。以下是遍历规则：
 ⾸先，oldStartIdx、oldEndIdx 与 newStartIdx、newEndIdx 两两<code>交叉⽐较</code>，共有 4 种情况:
-1. oldStartIdx 与 newStartIdx 所对应的 node 是 sameVnode
+1. oldStartIdx 与 newStartIdx 所对应的 node 是 sameVnode, patchVnode这两个结点。两个头指针各向后移一步
 
 ![updateChildren](@assets/vue/vnode/6.png)
 
-2. oldEndIdx 与 newEndIdx 所对应的 node 是 sameVnode
+2. oldEndIdx 与 newEndIdx 所对应的 node 是 sameVnode，patchVnode这两个结点。两个尾指针各向后前一步
 
 ![updateChildren](@assets/vue/vnode/7.png)
 
@@ -246,6 +252,7 @@ patchVnode做了两件事：
 ![updateChildren](@assets/vue/vnode/8.png)
 
 这种情况不仅要进行两者的 patchVNode，还需要将旧的节点移到 oldEndIdx 后面. 
+
 4. oldEndIdx 与 newStartIdx 所对应的 node 是 sameVnode
 
 ![updateChildren](@assets/vue/vnode/9.png)
@@ -258,38 +265,44 @@ patchVnode做了两件事：
 ![updateChildren](@assets/vue/vnode/10.png)
 
 这种情况首先进行两者的 patchVNode，然后将旧的节点移到 oldStartIdx 前面
+
 2. 没找到
 
 ![updateChildren](@assets/vue/vnode/11.png)
 
-这种情况首先会通过 newStartIdx 指向的 vnode 创建一个新的元素，然后插入到 oldStartIdx 前面
+这种情况首先会通过 newStartIdx 指向的 vnode 创建一个新的元素，然后插入到 oldStartIdx 前面。然后newStartIdx向后移一步
 
 ### 哈希表优化查找
+当新旧两组vnode节点，的头叉指针4种情况都匹配不上时。如果新vnode数组中，头指针指向的结点有key。此时会在旧vnode数组中找和头指针指向结点key相同的结点。为了提高速度，用map优化查找。key为 结点key, value为vnode的下标
 ```js
-  // oldKeyToIdx是一个对象, 保存了oldVond的key和index下标
-  if (isUndef(oldKeyToIdx)) { oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); }
-  idxInOld = isDef(newStartVnode.key)
-    ? oldKeyToIdx[newStartVnode.key]
-    : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx);
-  // ......
-  function createKeyToOldIdx (children, beginIdx, endIdx) {
-    var i, key;
-    var map = {};
-    for (i = beginIdx; i <= endIdx; ++i) {
-      key = children[i].key;
-      if (isDef(key)) { map[key] = i; }
-    }
-    return map
+function createKeyToOldIdx (children, beginIdx, endIdx) {
+  var i, key;
+  var map = {};
+  for (i = beginIdx; i <= endIdx; ++i) {
+    key = children[i].key;
+    if (isDef(key)) { map[key] = i; }
   }
+  return map
+}
+
+// oldKeyToIdx是一个对象, 保存了oldVond的key和index下标
+if (isUndef(oldKeyToIdx)) { oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); }
+idxInOld = isDef(newStartVnode.key)
+  ? oldKeyToIdx[newStartVnode.key]
+  : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx);
+// ......
+
 ```
 如果 newStartVnode 有标记key, 那么 直接 去 <code>oldKeyToIdx</code>查找, 看看 旧结点 中是否有和newStartVnode一样的结点. 
 
 最后，如果新旧子节点中有任何一方遍历完了，还需要做一个收尾工作，这里又分为两种情况:
 ```js
+// 旧的vnode数组先遍历完
 if (oldStartIdx > oldEndIdx) {
   refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
   addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
 } else if (newStartIdx > newEndIdx) {
+  // 新的vnode数组先遍历完
   removeVnodes(oldCh, oldStartIdx, oldEndIdx);
 }
 ```
@@ -298,6 +311,7 @@ if (oldStartIdx > oldEndIdx) {
 ![updateChildren](@assets/vue/vnode/12.png)
 
 这种情况需要将新的 children 中未遍历的节点进行插入.
+
 2. 新的先遍历完
 
 ![updateChildren](@assets/vue/vnode/13.png)
@@ -307,17 +321,41 @@ if (oldStartIdx > oldEndIdx) {
 到此，整个 patch 的过程就大致分析完了
 
 ## diff原理总结
-* 当数据发生改变时，订阅者watcher就会调用patch给真实的DOM打补丁
-* 通过isSameVnode进行判断，相同则调用patchVnode方法
-* patchVnode做了以下操作：
-  * 找到对应的真实dom，称为el
-  * 如果都是文本节点且文本不相等，将el文本节点设置为Vnode的文本节点. 即更新文本内容.
-  * 如果oldVnode有子节点而VNode没有，则删除el子节点
-  * 如果oldVnode没有子节点而VNode有，则将VNode的子节点真实化后添加到el
-  * 如果两者都有子节点，则执行updateChildren函数比较子节点
-* updateChildren主要做了以下操作：
-  * 设置新旧VNode的头尾指针
-  * 新旧头尾指针进行比较，循环向中间靠拢，根据情况调用patchVnode进行patch重复流程、调用createElem创建一个新节点，从哈希表寻找 key一致的VNode 节点再分情况操作
+diff是比较新旧两个vnode，来达到更新UI一系列操作。diff大方向上分为两种情况：
+1. 初次渲染：总的来说，是通过vnode创建真实的Dom树，并插入到旧节点后面，最后删除旧节点。所以实际上初次渲染时页面会有一瞬间会同时存在两个 id (通常为app)相同 的 div
+*  先说下vnode分别是什么。初次渲染时，oldVnode是$el元素，即实例化vue传el参数，此时的oldVnode是真实的Dom元素；新的vnode是render函数生成的vnode结点。
+* 把oldVnode变成vnode的JS数据结构。实例化一个vnode结点，把oldVnode赋给vnode.elem属性，再把生成的vnode结点赋给oldVnode。就达到了oldVnode从真实Dom转成虚拟Dom的结构的目的。
+* 生成真实的Dom，并插入页面旧结点后面。vnode是虚拟dom树，实际上是通过不断的，深度优先的，递归遍历vnode虚拟dom树，就可以生成真实dom树。生成的真实dom结点放在哪里？不断生成的dom元素是放在vnode.elem。所以vnode是一棵虚拟dom树，vnode.elem是一棵真实的dom树
+
+
+2. 非初次渲染。通常是由于响应式数据发生改变，触发渲染watcher的回调，回调又执行patch更新
+* 先说下对相同结点的定义。如果新旧两个vnode的key， tag标签等相同，那么就称它们是相同结点(isSameVnode)
+* 接下讲讲更新谁。非初渲染是怎么做到更新的？实际上这个更新是真实dom树的更新，vnode.elem才是维护真实dom树，所以可以说非初次渲染的目的是更新vnode.elem
+* 接下来讲讲diff核心内容。对比更新vnode(patchVnode)主要做3个操作：
+  1. 更新文本内容
+  2. 如果新的vnode没有子节点，旧的vnode有子节点，则dom树中相应去掉子节应
+  3. 如果新的vnode有子节点，旧的vnode没有子节点，则dom树中相应添加子节应
+  4. 如果两者都有子节点，则比较更新(updateChildren)子节点
+* 比较更新子节点，分别给新旧子节点数组，添加头尾指针。通过比较是否相同结点(定义上面说过了)，移动头尾指针来实现更新子结点。具体会做6+1步
+  1. 头头比较。相同结点，则头指针分别后移
+  2. 尾尾比较。相同，则前移
+  3. 头尾。相同，移动旧vnode结点。为什么移动旧的vnode而不是新的vnode，是因为旧的vnode.elem才真正是维护着真实dom
+  4. 尾头。相同，称动旧vnode结点。
+  5. 以上头尾4种交叉都不满足。通过map优化查找（key为vnode的key，value为数组下标），看是否能在旧vnode的头尾指针之间 找到 和新vnode头指针指向结点 相同的结点。若找到，移动旧的vnode结点
+  6. 若找不到，则需要创建 一个vnode结点，插入到旧的vnode数组中（头指针的前一个）
+  7. 最后一步。看看新旧结点数组谁先遍历完。如果新的先遍历完，则需删除旧结点数组多余的结点；如果旧的先遍历完，则需新增对应结点
+
+问：diff算法时间复杂度
+
+答：新旧虚拟DOM对比的时候，Diff算法比较只会在同层级进行, 不会跨层级比较。 所以Diff算法是:深度优先算法。 时间复杂度:O(n)
+
+加深理解：
+
+实际上是oldVnode.elem维护着真实Dom结构，初次渲染时，oldVnode.elem会插入到页面上，一般是body标签中；
+改变数据，渲染更新，一系列操作都是为了更新oldVnode.elem这个真实的dom树，你可能会问，为啥更新oldVnode.elem，就能更新到页面？
+
+实际上oldVnode.elem是一个引用。所以更新每次更新oldVnode.elem会更新页面真实Dom
+
 
 参考:
 [Vue 源码之 patch 详解](https://juejin.cn/post/6850418110911119374#heading-0)

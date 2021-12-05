@@ -1,5 +1,5 @@
 ## loader介绍
-默认情况下，在遇到import或者require加载模块的时候，webpack只支持对js 和 json 文件打包
+默认情况下，在遇到import或者require加载模块的时候，webpack只支持对js 和 json 文件打包（真的吗？？）
 
 像css、sass、png等这些类型的文件的时候，webpack则无能为力，这时候就需要配置对应的loader进行文件内容的解析
 

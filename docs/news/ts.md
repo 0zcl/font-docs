@@ -497,6 +497,15 @@ type GetValueByKey<T, U> = {
 type ResultType = GetValueByKey<SomeProps, (e: any) => void>
 ```
 
+问9：.ts和.d.ts的区别
+
+答：
+1. 两者都表示用ts编写的。.ts编译成.js，用来运行使用的
+2. .d.ts给IDE做智能提示用的
+
+参考：
 [TypeScript 中文手册](https://typescript.bootcss.com/)
 
 Function, Object不建议再使用，编译会出错。[ban-type](https://github.com/typescript-eslint/typescript-eslint/blob/v4.11.1/packages/eslint-plugin/docs/rules/ban-types.md)
+
+[Ts-in-action仓库](https://github.com/0zcl-free/TS-in-action)

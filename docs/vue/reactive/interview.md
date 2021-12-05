@@ -76,9 +76,9 @@ this._data.name = 'BBB'
 ```
 
 ## Vue 中的 key 有什么用?
-<code>高效的更新虚拟DOM</code>
+<code>高效的更新真实Dom树</code>
 
-Vnode进行patch时会调用sameNode方法, 判断两个Vnode是否为同一个. sameNode方法使用key值是否相等来进行判断：
+Vnode进行diff对比更新新旧vnode时，会通过vnode的key， tag标签等来判断两个Vnode结点是否为同一个（sameNode）. 从而来高效更新dom树。再深入请看：[diff](../vnode/diff.md)
 ```js
 function sameVnode(a, b) {
   return (
@@ -93,21 +93,18 @@ function sameVnode(a, b) {
   );
 }
 ```
-### 举例:
-![key](@assets/vue/vnode/1.png)
+为什么不用index作为key? 
 
-我们希望可以在B和C之间加一个F，Diff算法默认执行起来是这样的：
-![key](@assets/vue/vnode/2.png)
+如下，左边是初始数据，然后我在数据前插入一个新数据，变成右边的列表。实际上每个dom结点都要更新，更新文本。深入来说是：diff中头头比较，做patchVnode更新，更新了文本。消费性能，不建议使用！
+```js
+<ul>                      <ul>
+    <li key="0">a</li>        <li key="0">林三心</li>
+    <li key="1">b</li>        <li key="1">a</li>
+    <li key="2">c</li>        <li key="2">b</li>
+                              <li key="3">c</li>
+</ul>                     </ul>
+```
 
-C更新成F，D更新成C，E更新成D，最后再插入E，发生了 4 次 vnode 结构变化. 是不是很没有效率？
-
-使用key来给每个节点做一个唯一标识，Diff算法就可以正确的识别此节点，找到正确的位置区插入新的节点。
-
-![key](@assets/vue/vnode/3.png)
-
-只需 发生 1次 vnode 结构变化 
-
-[v-for为什么要加key，能用index作为key么](https://www.cnblogs.com/youhong/p/11327062.html)
 
 ## v-model原理
 v-model是个语法糖: 原理是监听input事件，把当前更新的值赋给响应式数据
